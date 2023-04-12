@@ -206,7 +206,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 40984782}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 70313707}
+        m_TargetAssemblyTypeName: AlexeyVlasyuk.MultiplayerTest.LobbySceneManager,
+          Assembly-CSharp
+        m_MethodName: OnJoinRoomPressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &40984782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -424,6 +437,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5be5b3dab2ab4fa48d63b9499de1a5ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _createRoomInput: {fileID: 242595393}
+  _joinRoomInput: {fileID: 1651063509}
 --- !u!1 &242595391
 GameObject:
   m_ObjectHideFlags: 0
@@ -1760,7 +1775,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1259608597}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 70313707}
+        m_TargetAssemblyTypeName: AlexeyVlasyuk.MultiplayerTest.LobbySceneManager,
+          Assembly-CSharp
+        m_MethodName: OnCreateRoomPressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1259608597
 MonoBehaviour:
   m_ObjectHideFlags: 0
