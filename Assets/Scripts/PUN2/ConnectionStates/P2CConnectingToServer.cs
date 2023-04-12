@@ -51,7 +51,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates
 
         void OnSuccess()
         {
-            //p2c.SetConnectionState(p2c.csWaitBeforeJoinLobby);
+            p2c.SetConnectionState(p2c.csWaitBeforeJoinLobby);
         }
     }
 }

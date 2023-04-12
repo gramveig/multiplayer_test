@@ -24,6 +24,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         //connection states
         public PUN2ConnectionState csDisconnected { get; private set; }
         public PUN2ConnectionState csConnectingToServer { get; private set; }
+        public PUN2ConnectionState csWaitBeforeJoinLobby { get; private set; }
 
         public enum LogLevel
         {
@@ -116,8 +117,9 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         {
             csDisconnected = new P2CDisconnected(this);
             csConnectingToServer = new P2CConnectingToServer(this);
+            csWaitBeforeJoinLobby = new P2CWaitBeforeJoinLobby(this);
         }
-        
+
         #endregion
         
         //sending standard PUN2 callbacks to the states
