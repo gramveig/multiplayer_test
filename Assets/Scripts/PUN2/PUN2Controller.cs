@@ -27,6 +27,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         public PUN2ConnectionState csWaitBeforeJoinLobby { get; private set; }
         public PUN2ConnectionState csJoiningLobby { get; private set; }
         public PUN2ConnectionState csWaitBeforeRejoinLobby { get; private set; }
+        public PUN2ConnectionState csInLobby { get; private set; }
 
         public readonly TypedLobby customLobby = new TypedLobby("MultiplayerTestLobby", LobbyType.Default);
 
@@ -118,6 +119,29 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             OnControllerDisconnected?.Invoke();
         }
 
+        public bool IsDetailedLog
+        {
+            get
+            {
+                return (int)_logLevel > (int)LogLevel.Normal;
+            }
+        }
+
+        public int UpdateCachedRoomList(List<RoomInfo> roomList)
+        {
+            foreach (var info in roomList)
+            {
+                if (info.RemovedFromList)
+                    _cachedRoomList.Remove(info.Name);
+                else
+                    _cachedRoomList[info.Name] = info;
+            }
+
+            //onGameZoneListChange?.Invoke(MultiplayerGameList);
+
+            return _cachedRoomList.Count;
+        }
+
         #endregion
         
         #region Private
@@ -129,6 +153,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             csWaitBeforeJoinLobby = new P2CWaitBeforeJoinLobby(this);
             csJoiningLobby = new P2CJoiningLobby(this);
             csWaitBeforeRejoinLobby = new P2CWaitBeforeRejoinLobby(this);
+            csInLobby = new P2CInLobby(this);
         }
 
         #endregion

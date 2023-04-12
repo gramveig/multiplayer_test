@@ -1,19 +1,20 @@
+using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
 namespace AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates
 {
-    public class P2CJoiningLobby : PUN2ConnectionState
+    public class P2CInLobby : PUN2ConnectionState
     {
-        public P2CJoiningLobby(PUN2Controller p2c)
+        public P2CInLobby(PUN2Controller p2c)
         {
             this.p2c = p2c;
         }
 
         public override void Start()
         {
-            Debug.Log("PUN2: Joining Lobby");
+            Debug.Log("PUN2: Listening to room list updates");
 
             if (!PhotonNetwork.IsConnected)
             {
@@ -22,14 +23,12 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates
                 return;
             }
 
-            if (PhotonNetwork.InLobby)
+            if (!PhotonNetwork.InLobby)
             {
-                Debug.LogError("PUN2: already in Lobby");
-                OnSuccess();
+                Debug.LogError("PUN2: not in Lobby");
+                OnFailure();
                 return;
             }
-
-            PhotonNetwork.JoinLobby(p2c.customLobby);
         }
 
         public override void OnDisconnected(DisconnectCause cause)
@@ -38,21 +37,21 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates
             OnServerDisconnect();
         }
 
-        public override void OnJoinedLobby()
-        {
-            Debug.Log("PUN2: Successfully joined Lobby");
-            OnSuccess();
-        }
-
         public override void OnLeftLobby()
         {
-            Debug.Log("PUN2: Failed to join Lobby");
+            Debug.Log("PUN2: Unexpectedly left Lobby");
             OnFailure();
         }
 
-        void OnSuccess()
+        //room list updates while we're in lobby
+        public override void OnRoomListUpdate(List<RoomInfo> roomList)
         {
-            p2c.SetConnectionState(p2c.csInLobby);
+            int roomCount = p2c.UpdateCachedRoomList(roomList);
+
+            if (p2c.IsDetailedLog)
+            {
+                Debug.Log("PUN2: Updating room list. Room count: " + roomCount);
+            }
         }
 
         void OnFailure()
