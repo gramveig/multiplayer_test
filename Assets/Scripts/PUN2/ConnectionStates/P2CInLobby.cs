@@ -52,6 +52,8 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates
             {
                 Debug.Log("PUN2: Updating room list. Room count: " + roomCount);
             }
+
+            p2c.CallOnConnectedToLobby();
         }
 
         void OnFailure()

@@ -14,17 +14,34 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
             PUN2Controller.Instance.ConectToServer();
 
-            PUN2Controller.Instance.OnControllerDisconnected += OnControllerDisconnected;
+            Subscribe();
         }
 
         private void OnDestroy()
         {
-            PUN2Controller.Instance.OnControllerDisconnected -= OnControllerDisconnected;
+            Unsubscribe();
         }
 
+        private void Subscribe()
+        {
+            PUN2Controller.Instance.OnControllerDisconnected += OnControllerDisconnected;
+            PUN2Controller.Instance.OnConnectedToLobby += OnConnectedToLobby;
+        }
+
+        private void Unsubscribe()
+        {
+            PUN2Controller.Instance.OnControllerDisconnected -= OnControllerDisconnected;
+            PUN2Controller.Instance.OnConnectedToLobby -= OnConnectedToLobby;
+        }
+        
         private void OnControllerDisconnected()
         {
             SceneManager.LoadScene("Disconnect");
+        }
+
+        private void OnConnectedToLobby()
+        {
+            SceneManager.LoadScene("Lobby");
         }
     }
 }

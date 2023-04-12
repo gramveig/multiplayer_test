@@ -20,6 +20,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         public bool IsReadyToSendReceiveEvents { get; set; }
 
         public event Action OnControllerDisconnected;
+        public event Action OnConnectedToLobby;
 
         //connection states
         public PUN2ConnectionState csDisconnected { get; private set; }
@@ -119,6 +120,11 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             OnControllerDisconnected?.Invoke();
         }
 
+        public void CallOnConnectedToLobby()
+        {
+            OnConnectedToLobby?.Invoke();
+        }
+
         public bool IsDetailedLog
         {
             get
@@ -141,6 +147,8 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
 
             return _cachedRoomList.Count;
         }
+
+        public bool IsInLobby => _connectionState == csInLobby;
 
         #endregion
         

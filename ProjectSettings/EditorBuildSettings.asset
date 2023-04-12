@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Disconnect.unity
     guid: 7c2f01e0bcdddf844ad8155fb2f6b0be
+  - enabled: 1
+    path: Assets/Scenes/Lobby.unity
+    guid: 16ad3e34e56f0fe4899e5729c264ec75
   m_configObjects: {}
