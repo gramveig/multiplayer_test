@@ -20,7 +20,8 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         public bool IsReadyToSendReceiveEvents { get; set; }
 
         public PUN2ConnectionState csDisconnected { get; private set; }
-        
+        public PUN2ConnectionState csConnectingToServer { get; private set; }
+
         public enum LogLevel
         {
             Normal,
@@ -66,6 +67,20 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
 
         #region Public
 
+        public static PUN2Controller Instance => _instance;
+        
+        public void ConectToServer()
+        {
+            SetConnectionState(csConnectingToServer);
+        }
+
+        public string GetRandomPlayerName()
+        {
+            const string BaseName = "player";
+
+            return BaseName + Random.Range(1, 999);
+        }
+        
         public void SetConnectionState(PUN2ConnectionState newConnectionState)
         {
             if (_connectionState == newConnectionState)
@@ -84,7 +99,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         {
             _cachedRoomList.Clear();
         }
-        
+
         #endregion
         
         #region Private
@@ -92,7 +107,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         private void InitConnectionStates()
         {
             csDisconnected = new P2CDisconnected(this);
-
+            csConnectingToServer = new P2CConnectingToServer(this);
         }
         
         #endregion
