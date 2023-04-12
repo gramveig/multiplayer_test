@@ -19,6 +19,9 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         public bool IsInitialized { get; private set; }
         public bool IsReadyToSendReceiveEvents { get; set; }
 
+        public event Action OnControllerDisconnected;
+
+        //connection states
         public PUN2ConnectionState csDisconnected { get; private set; }
         public PUN2ConnectionState csConnectingToServer { get; private set; }
 
@@ -98,6 +101,11 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         public void ClearCachedRoomList()
         {
             _cachedRoomList.Clear();
+        }
+
+        public void CallOnDisconnectEvent()
+        {
+            OnControllerDisconnected?.Invoke();
         }
 
         #endregion

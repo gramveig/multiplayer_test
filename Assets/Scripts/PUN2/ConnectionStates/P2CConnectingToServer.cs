@@ -46,7 +46,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates
         public override void OnDisconnected(DisconnectCause cause)
         {
             Debug.Log("PUN2: Failed to connect to Photon server. Cause: " + cause);
-            //p2c.SetConnectionState(p2c.csWaitBeforeReconnect);
+            p2c.CallOnDisconnectEvent();
         }
 
         void OnSuccess()
