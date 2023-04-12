@@ -25,6 +25,9 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         public PUN2ConnectionState csDisconnected { get; private set; }
         public PUN2ConnectionState csConnectingToServer { get; private set; }
         public PUN2ConnectionState csWaitBeforeJoinLobby { get; private set; }
+        public PUN2ConnectionState csJoiningLobby { get; private set; }
+
+        public readonly TypedLobby customLobby = new TypedLobby("MultiplayerTestLobby", LobbyType.Default);
 
         public enum LogLevel
         {
@@ -66,7 +69,12 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
 
             IsInitialized = true;
         }
-        
+
+        void Update()
+        {
+            _connectionState?.Update();
+        }
+
         #endregion
 
         #region Public
@@ -118,6 +126,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             csDisconnected = new P2CDisconnected(this);
             csConnectingToServer = new P2CConnectingToServer(this);
             csWaitBeforeJoinLobby = new P2CWaitBeforeJoinLobby(this);
+            csJoiningLobby = new P2CJoiningLobby(this);
         }
 
         #endregion
