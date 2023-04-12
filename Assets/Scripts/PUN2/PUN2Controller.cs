@@ -26,6 +26,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         public PUN2ConnectionState csConnectingToServer { get; private set; }
         public PUN2ConnectionState csWaitBeforeJoinLobby { get; private set; }
         public PUN2ConnectionState csJoiningLobby { get; private set; }
+        public PUN2ConnectionState csWaitBeforeRejoinLobby { get; private set; }
 
         public readonly TypedLobby customLobby = new TypedLobby("MultiplayerTestLobby", LobbyType.Default);
 
@@ -127,6 +128,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             csConnectingToServer = new P2CConnectingToServer(this);
             csWaitBeforeJoinLobby = new P2CWaitBeforeJoinLobby(this);
             csJoiningLobby = new P2CJoiningLobby(this);
+            csWaitBeforeRejoinLobby = new P2CWaitBeforeRejoinLobby(this);
         }
 
         #endregion

@@ -57,7 +57,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates
 
         void OnFailure()
         {
-            //p2c.SetConnectionState(p2c.csWaitBeforeRejoinLobby);
+            p2c.SetConnectionState(p2c.csWaitBeforeRejoinLobby);
         }
 
         void OnServerDisconnect()
