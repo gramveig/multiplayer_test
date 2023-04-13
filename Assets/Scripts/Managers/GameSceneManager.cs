@@ -27,8 +27,6 @@ namespace AlexeyVlasyuk.MultiplayerTest
         private FixedJoystick _rotationJoyst;
         
         private Camera _cam;
-        private Vector2 _worldBtmLeftCorner;
-        private Vector2 _worldTopRightCorner;
         private Player _player;
         
         private async void Start()
@@ -71,20 +69,20 @@ namespace AlexeyVlasyuk.MultiplayerTest
         {
             Random.InitState(roomSeed);
             _borders.Generate();
-            ScatterGold();
+            ScatterCoins();
             AddPlayer();
         }
 
-        private void ScatterGold()
+        private void ScatterCoins()
         {
             const float Margin = 0.5f;
             
-            _worldBtmLeftCorner = _cam.ScreenToWorldPoint(Vector3.zero);
-            _worldTopRightCorner = _cam.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height));
+            var worldBtmLeftCorner = _cam.ScreenToWorldPoint(Vector3.zero);
+            var worldTopRightCorner = _cam.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height));
 
             for (int i = 0; i < _numCoins; i++)
             {
-                var pos = new Vector2(Random.Range(_worldBtmLeftCorner.x + Margin, _worldTopRightCorner.x - Margin), Random.Range(_worldBtmLeftCorner.y + Margin, _worldTopRightCorner.y - Margin));
+                var pos = new Vector2(Random.Range(worldBtmLeftCorner.x + Margin, worldTopRightCorner.x - Margin), Random.Range(worldBtmLeftCorner.y + Margin, worldTopRightCorner.y - Margin));
                 var coin = Instantiate(_coinPrefab, pos, Quaternion.identity);
                 coin.Init(OnCoinPicked);
             }
