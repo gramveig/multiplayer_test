@@ -30,7 +30,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates
         public override void OnJoinedRoom()
         {
             Debug.Log("PUN2: Successfully joined created room (or the existing one, if the room with the same name already existed)");
-            p2c.CallOnJoinedRoomEvent();
+            p2c.CallOnMainClientJoinedRoomEvent();
             p2c.SetConnectionState(p2c.csWaitForPlayers);
         }
 

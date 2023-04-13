@@ -23,7 +23,8 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
 
         public event Action OnP2ControllerDisconnected;
         public event Action OnP2ControllerConnectedToLobby;
-        public event Action OnP2ControllerJoinedRoom;
+        public event Action OnP2ControllerMainClientJoinedRoom;
+        public event Action OnP2ControllerFollowingClientJoinedRoom;
         public event Action OnP2ControllerCannotJoinRoom;
         public event Action OnP2ControllerOtherPlayersJoinedRoom;
 
@@ -247,9 +248,14 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             }
         }
 
-        public void CallOnJoinedRoomEvent()
+        public void CallOnMainClientJoinedRoomEvent()
         {
-            OnP2ControllerJoinedRoom?.Invoke();
+            OnP2ControllerMainClientJoinedRoom?.Invoke();
+        }
+
+        public void CallOnFollowingClientJoinedRoom()
+        {
+            OnP2ControllerFollowingClientJoinedRoom?.Invoke();
         }
 
         public void CallOnCannotJoinRoomEvent()

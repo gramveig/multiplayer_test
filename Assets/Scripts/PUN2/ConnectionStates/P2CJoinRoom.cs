@@ -25,14 +25,14 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates
         public override void OnJoinedRoom()
         {
             Debug.Log("PUN2: Successfully joined room");
-            p2c.CallOnJoinedRoomEvent();
+            p2c.CallOnFollowingClientJoinedRoom();
         }
 
         public override void OnJoinRoomFailed(short returnCode, string message)
         {
             Debug.Log($"PUN2: Unable to join room. Return code: {returnCode}. Message: {message}");
-            p2c.SetConnectionState(p2c.csJoinLobby);
             p2c.CallOnCannotJoinRoomEvent();
+            p2c.SetConnectionState(p2c.csJoinLobby);
         }
     }
 }
