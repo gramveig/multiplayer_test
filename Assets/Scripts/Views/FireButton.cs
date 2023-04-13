@@ -7,8 +7,11 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
 {
     public class FireButton : Selectable
     {
-        public UnityEvent _onStartFire;
-        public UnityEvent _onStopFire;
+        [SerializeField]
+        private UnityEvent _onStartFire;
+
+        [SerializeField]
+        private UnityEvent _onStopFire;
         
         public override void OnPointerDown(PointerEventData eventData)
         {
