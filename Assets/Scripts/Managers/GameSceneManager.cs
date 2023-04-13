@@ -67,10 +67,10 @@ namespace AlexeyVlasyuk.MultiplayerTest
         
         private void CreateRoom(int roomSeed)
         {
-            Random.InitState(roomSeed);
             _borders.Generate();
-            ScatterCoins();
             AddPlayer();
+            Random.InitState(roomSeed);
+            ScatterCoins();
         }
 
         private void ScatterCoins()
@@ -90,7 +90,11 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         private void AddPlayer()
         {
-            var pos = new Vector2();
+            var worldBtmLeftCorner = _cam.ScreenToWorldPoint(Vector3.zero);
+            var worldTopRightCorner = _cam.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height));
+            var scrWidthUnits = worldTopRightCorner.x - worldBtmLeftCorner.x;
+            var scrHeightUnits = worldTopRightCorner.y - worldBtmLeftCorner.y;
+            var pos = new Vector2(Random.Range(-scrWidthUnits/2f, scrWidthUnits/2f), Random.Range(-scrHeightUnits/2f, scrHeightUnits/2f));
             _player = Instantiate(_playerPrefab, pos, Quaternion.identity);
         }
         
