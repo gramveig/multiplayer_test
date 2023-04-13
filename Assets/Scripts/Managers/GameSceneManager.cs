@@ -12,17 +12,21 @@ namespace AlexeyVlasyuk.MultiplayerTest
         private int _numCoins = 20;
 
         [SerializeField]
-        private GameObject _coinPrefab;
+        private Coin _coinPrefab;
 
         [SerializeField]
         private Borders _borders;
 
         [SerializeField]
         private Player _playerPrefab;
+
+        [SerializeField]
+        private FixedJoystick _coordJoyst;
         
         private Camera _cam;
         private Vector2 _worldBtmLeftCorner;
         private Vector2 _worldTopRightCorner;
+        private Player _player;
         
         private async void Start()
         {
@@ -51,6 +55,14 @@ namespace AlexeyVlasyuk.MultiplayerTest
             Unsubscribe();
         }
 
+        private void Update()
+        {
+            if (_player != null)
+            {
+                _player.UpdateCoord(_coordJoyst.Horizontal, _coordJoyst.Vertical);
+            }
+        }
+        
         private void CreateRoom(int roomSeed)
         {
             Random.InitState(roomSeed);
@@ -69,14 +81,15 @@ namespace AlexeyVlasyuk.MultiplayerTest
             for (int i = 0; i < _numCoins; i++)
             {
                 var pos = new Vector2(Random.Range(_worldBtmLeftCorner.x + Margin, _worldTopRightCorner.x - Margin), Random.Range(_worldBtmLeftCorner.y + Margin, _worldTopRightCorner.y - Margin));
-                Instantiate(_coinPrefab, pos, Quaternion.identity);
+                var coin = Instantiate(_coinPrefab, pos, Quaternion.identity);
+                coin.Init(OnCoinPicked);
             }
         }
 
         private void AddPlayer()
         {
             var pos = new Vector2();
-            Instantiate(_playerPrefab, pos, Quaternion.identity);
+            _player = Instantiate(_playerPrefab, pos, Quaternion.identity);
         }
         
         private void Subscribe()
@@ -92,6 +105,11 @@ namespace AlexeyVlasyuk.MultiplayerTest
         private void OnP2ControllerDisconnected()
         {
             SceneManager.LoadScene("Disconnect");
+        }
+
+        private void OnCoinPicked()
+        {
+            Debug.Log("On coin picked");
         }
     }
 }
