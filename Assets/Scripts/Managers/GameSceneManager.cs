@@ -9,27 +9,33 @@ namespace AlexeyVlasyuk.MultiplayerTest
     {
         [SerializeField]
         private int _numCoins = 20;
+
+        [SerializeField]
+        private GameObject _coinPrefab;
+
+        private Camera _cam;
+        private Vector2 _worldBtmLeftCorner;
+        private Vector2 _worldTopRightCorner;
         
         private async void Start()
         {
             await UniTask.WaitUntil(() => PUN2Controller.Instance != null && PUN2Controller.Instance.IsInitialized);
 
-            if (!PUN2Controller.Instance.IsCurrentRoom)
-            {
-                Debug.LogError("No current room");
-                OnP2ControllerDisconnected();
-                return;
-            }
+            _cam = Camera.main;
 
             Subscribe();
 
-            int roomSeed = PUN2Controller.Instance.GetCurrentRoomSeed();
-            if (roomSeed == -1)
+            int roomSeed;
+            if (PUN2Controller.Instance.IsCurrentRoom)
             {
-                OnP2ControllerDisconnected();
-                return;
+                roomSeed = PUN2Controller.Instance.GetCurrentRoomSeed();
             }
-            
+            else
+            {
+                Debug.Log("No current room defined. Scene is running in test mode");
+                roomSeed = PUN2Controller.Instance.GetRandomSeed();
+            }
+
             CreateRoom(roomSeed);
         }
 
@@ -41,11 +47,21 @@ namespace AlexeyVlasyuk.MultiplayerTest
         private void CreateRoom(int roomSeed)
         {
             Random.InitState(roomSeed);
+            ScatterGold();
         }
 
         private void ScatterGold()
         {
+            const float Margin = 0.5f;
             
+            _worldBtmLeftCorner = _cam.ScreenToWorldPoint(Vector3.zero);
+            _worldTopRightCorner = _cam.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height));
+
+            for (int i = 0; i < _numCoins; i++)
+            {
+                var pos = new Vector2(Random.Range(_worldBtmLeftCorner.x + Margin, _worldTopRightCorner.x - Margin), Random.Range(_worldBtmLeftCorner.y + Margin, _worldTopRightCorner.y - Margin));
+                Instantiate(_coinPrefab, pos, Quaternion.identity);
+            }
         }
 
         private void Subscribe()

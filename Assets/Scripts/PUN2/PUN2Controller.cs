@@ -183,7 +183,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
                 return;
             }
 
-            int roomSeed = Random.Range(int.MinValue, int.MaxValue);
+            int roomSeed = GetRandomSeed();
 
             RoomOptions roomOptions = new RoomOptions
             {
@@ -280,7 +280,12 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         public int GetCurrentRoomSeed()
         {
             var room = PhotonNetwork.CurrentRoom;
-
+            if (room == null)
+            {
+                Debug.LogError("PUN2: No current room");
+                return - 1;
+            }
+            
             if (!room.CustomProperties.ContainsKey("Seed"))
             {
                 Debug.LogError("PUN2: Seed property is not saved in the room properties");
@@ -290,6 +295,11 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             int roomSeed = (int)room.CustomProperties["Seed"];
 
             return roomSeed;
+        }
+
+        public int GetRandomSeed()
+        {
+            return Random.Range(int.MinValue, int.MaxValue);
         }
 
         #endregion

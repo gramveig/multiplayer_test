@@ -167,7 +167,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5c6118f4f3e4b29aa503a2bdf7027a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _numCoins: 20
+  _numCoins: 40
+  _coinPrefab: {fileID: 223696379797165593, guid: d4ca2e46eb858e94c9cee597175e6d07, type: 3}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
