@@ -1,4 +1,5 @@
 using AlexeyVlasyuk.MultiplayerTest.PUN2;
+using AlexeyVlasyuk.MultiplayerTest.Views;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,6 +13,9 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         [SerializeField]
         private GameObject _coinPrefab;
+
+        [SerializeField]
+        private Borders _borders;
 
         private Camera _cam;
         private Vector2 _worldBtmLeftCorner;
@@ -47,6 +51,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
         private void CreateRoom(int roomSeed)
         {
             Random.InitState(roomSeed);
+            _borders.Generate();
             ScatterGold();
         }
 
