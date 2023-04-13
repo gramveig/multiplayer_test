@@ -254,6 +254,8 @@ MonoBehaviour:
   _playerPrefab: {fileID: 6531042890501830100, guid: 4d12c03a2636ed74986618d1babde0fd, type: 3}
   _coordJoyst: {fileID: 760136151}
   _rotationJoyst: {fileID: 873669681}
+  _joystCanvas: {fileID: 1955958406}
+  _uiCanvas: {fileID: 1901559601}
 --- !u!224 &142325439 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2929252283123773938, guid: aaa2c939c0359ac4dbce3f49e8b90252, type: 3}
