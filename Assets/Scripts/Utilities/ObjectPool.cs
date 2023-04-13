@@ -38,7 +38,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.Utilities
 #endif
         }
 
-        public void Prefetch(int count)
+        public void Prefetch(int count = DefaultPoolSize)
         {
             for (int i = 0; i < count; i++)
             {

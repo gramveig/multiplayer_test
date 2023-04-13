@@ -9,15 +9,16 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
         private float _speedMovement = 10f;
         
         [SerializeField]
-        private float _speedRotation = 10f;
+        private float _speedRotation = 200f;
 
-        private Rigidbody2D _rigidBody;
+        [SerializeField]
+        private Cannon _cannon;
+
         private Transform _transform;
-
+        
         private void Awake()
         {
             _transform = transform;
-            _rigidBody = GetComponent<Rigidbody2D>();
         }
 
         public void UpdateCoord(float x, float y)
@@ -33,6 +34,16 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
             float angle = Mathf.Atan2(x, y ) * Mathf.Rad2Deg;
             Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, -angle));
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _speedRotation * Time.deltaTime * magn);
+        }
+
+        public void StartFire()
+        {
+            _cannon.StartFire();
+        }
+        
+        public void StopFire()
+        {
+            _cannon.StopFire();
         }
     }
 }

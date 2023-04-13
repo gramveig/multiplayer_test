@@ -27,6 +27,11 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
             rightCollider.gameObject.AddComponent<BoxCollider2D>();
             leftCollider.gameObject.AddComponent<BoxCollider2D>();
 
+            topCollider.gameObject.tag = "Border";
+            bottomCollider.gameObject.tag = "Border";
+            rightCollider.gameObject.tag = "Border";
+            leftCollider.gameObject.tag = "Border";
+
             var t = transform;
             topCollider.parent = t;
             bottomCollider.parent = t;

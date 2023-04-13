@@ -118,7 +118,12 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         public void OnFirePressed()
         {
-            Debug.Log("Fire pressed");
+            _player.StartFire();
+        }
+        
+        public void OnFireReleased()
+        {
+            _player.StopFire();
         }
     }
 }
