@@ -190,6 +190,8 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         private void OnP2ControllerRoomIsReady()
         {
+            Debug.Log("OnP2ControllerRoomIsReady");
+            
             if (PhotonNetwork.IsMasterClient)
             {
                 return;

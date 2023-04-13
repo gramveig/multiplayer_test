@@ -150,6 +150,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         private void OnP2ControllerFollowingClientJoinedRoom()
         {
+            PUN2Controller.Instance.DisableCustomPUN2Events();
             SceneManager.LoadScene("Game");
         }
         
