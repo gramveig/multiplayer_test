@@ -30,7 +30,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         public PUN2ConnectionState csDisconnected { get; private set; }
         public PUN2ConnectionState csConnectingToServer { get; private set; }
         public PUN2ConnectionState csWaitBeforeJoinLobby { get; private set; }
-        public PUN2ConnectionState csJoiningLobby { get; private set; }
+        public PUN2ConnectionState csJoinLobby { get; private set; }
         public PUN2ConnectionState csWaitBeforeRejoinLobby { get; private set; }
         public PUN2ConnectionState csInLobby { get; private set; }
         public P2CCreateRoom csCreateRoom { get; private set; }
@@ -284,7 +284,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             csDisconnected = new P2CDisconnected(this);
             csConnectingToServer = new P2CConnectingToServer(this);
             csWaitBeforeJoinLobby = new P2CWaitBeforeJoinLobby(this);
-            csJoiningLobby = new P2CJoiningLobby(this);
+            csJoinLobby = new P2CJoinLobby(this);
             csWaitBeforeRejoinLobby = new P2CWaitBeforeRejoinLobby(this);
             csInLobby = new P2CInLobby(this);
             csCreateRoom = new P2CCreateRoom(this);

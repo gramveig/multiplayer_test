@@ -55,7 +55,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates
         {
             _successTriggered = true;
 
-            p2c.SetConnectionState(p2c.csJoiningLobby);
+            p2c.SetConnectionState(p2c.csJoinLobby);
         }
 
         void OnServerDisconnect()
