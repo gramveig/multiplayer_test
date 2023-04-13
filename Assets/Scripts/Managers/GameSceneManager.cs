@@ -121,7 +121,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
             for (int i = 0; i < _numCoins; i++)
             {
                 var pos = new Vector2(Random.Range(worldBtmLeftCorner.x + Margin, worldTopRightCorner.x - Margin), Random.Range(worldBtmLeftCorner.y + Margin, worldTopRightCorner.y - Margin));
-                Coin coin;
+                Coin coin = null;
                 if (!_isTestMode)
                 {
                     var coinObj = PhotonNetwork.InstantiateRoomObject(_coinPrefab, pos, Quaternion.identity);
@@ -129,7 +129,10 @@ namespace AlexeyVlasyuk.MultiplayerTest
                     {
                         Debug.LogError("Instantiate returned null object for coin " + i);
                     }
-                    coin = coinObj.GetComponent<Coin>();
+                    else
+                    {
+                        coin = coinObj.GetComponent<Coin>();
+                    }
                 }
                 else
                 {
@@ -137,7 +140,10 @@ namespace AlexeyVlasyuk.MultiplayerTest
                     coin = Instantiate(coinPrefab, pos, Quaternion.identity);
                 }
 
-                coin.Init(OnCoinPicked);
+                if (coin != null)
+                {
+                    coin.Init(OnCoinPicked);
+                }
             }
         }
 
