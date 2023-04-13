@@ -25,7 +25,6 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         private List<string> _roomNames = new ();
 
         public bool IsInitialized { get; private set; }
-        public bool IsReadyToSendReceiveEvents { get; set; }
 
         public event Action OnP2ControllerDisconnected;
         public event Action OnP2ControllerConnectedToLobby;
@@ -260,7 +259,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
                 return;
             }
 
-            Debug.Log($"Player {PhotonNetwork.NickName} has attempted to join room {_roomName}");
+            Debug.Log($"Player {PhotonNetwork.NickName} has attempted to join room '{_roomName}'");
             bool result = PhotonNetwork.JoinRoom(_roomName);
             if (!result)
             {
@@ -352,6 +351,18 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             }
 
             PhotonNetwork.RaiseEvent((byte)PUN2CustomEvents.RoomIsReady, null, CommonRaiseEventOpts, CommonSendOpts);
+        }
+        
+        public void DisableCustomPUN2Events()
+        {
+            PhotonNetwork.IsMessageQueueRunning = false;
+            Debug.Log("PUN2: Custom PUN2 messages disabled");
+        }
+
+        public void EnableCustomPun2Events()
+        {
+            PhotonNetwork.IsMessageQueueRunning = true;
+            Debug.Log("PUN2: Custom PUN messages enabled");
         }
 
         #endregion

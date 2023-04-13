@@ -18,7 +18,6 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates
                 PhotonNetwork.Disconnect();
             }
 
-            p2c.IsReadyToSendReceiveEvents = false;
             p2c.ClearCachedRoomList();
         }
     }

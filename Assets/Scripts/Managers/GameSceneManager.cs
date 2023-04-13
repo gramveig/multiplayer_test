@@ -72,6 +72,8 @@ namespace AlexeyVlasyuk.MultiplayerTest
                 _roomSeed = PUN2Controller.Instance.GetRandomSeed();
             }
 
+            PUN2Controller.Instance.EnableCustomPun2Events();
+
             //start building room immediately if master client.
             //Otherwise waiting for RoomIsReady net event
             if (PhotonNetwork.IsMasterClient)

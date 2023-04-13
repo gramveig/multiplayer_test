@@ -144,8 +144,8 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         private void OnP2ControllerMainClientJoinedRoom()
         {
-            //main client waits first for other players join the room before loading game scene
-            SceneManager.LoadScene("WaitingForPlayers");
+            PUN2Controller.Instance.DisableCustomPUN2Events();
+            SceneManager.LoadScene("Game");
         }
 
         private void OnP2ControllerFollowingClientJoinedRoom()
