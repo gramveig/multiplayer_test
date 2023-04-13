@@ -38,6 +38,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         public P2CCreateRoom csCreateRoom { get; private set; }
         public P2CJoinRoom csJoinRoom { get; private set; }
         public P2CWaitForPlayers csWaitForPlayers { get; private set; }
+        public P2CInGame csInGame { get; private set; }
 
         public readonly TypedLobby customLobby = new TypedLobby("MultiplayerTestLobby", LobbyType.Default);
 
@@ -330,6 +331,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             csCreateRoom = new P2CCreateRoom(this);
             csJoinRoom = new P2CJoinRoom(this);
             csWaitForPlayers = new P2CWaitForPlayers(this);
+            csInGame = new P2CInGame(this);
         }
 
         #endregion

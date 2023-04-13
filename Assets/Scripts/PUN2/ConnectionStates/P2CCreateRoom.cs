@@ -29,9 +29,25 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates
 
         public override void OnJoinedRoom()
         {
-            Debug.Log("PUN2: Successfully joined created room (or the existing one, if the room with the same name already existed)");
-            p2c.CallOnMainClientJoinedRoomEvent();
-            p2c.SetConnectionState(p2c.csWaitForPlayers);
+            if (PhotonNetwork.CurrentRoom == null)
+            {
+                Debug.LogError("PUN2: joined room, but current room is not set");
+                p2c.CallOnDisconnectEvent();
+                return;
+            }
+
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 0)
+            {
+                Debug.Log("PUN2: Successfully joined created room");
+                p2c.CallOnMainClientJoinedRoomEvent();
+                p2c.SetConnectionState(p2c.csWaitForPlayers);
+            }
+            else
+            {
+                Debug.Log("PUN2: Successfully joined already created room with the same name");
+                p2c.CallOnFollowingClientJoinedRoom();
+                p2c.SetConnectionState(p2c.csInGame);
+            }
         }
 
         public override void OnJoinRoomFailed(short returnCode, string message)
