@@ -125,6 +125,10 @@ namespace AlexeyVlasyuk.MultiplayerTest
                 if (!_isTestMode)
                 {
                     var coinObj = PhotonNetwork.InstantiateRoomObject(_coinPrefab, pos, Quaternion.identity);
+                    if (coinObj == null)
+                    {
+                        Debug.LogError("Instantiate returned null object for coin " + i);
+                    }
                     coin = coinObj.GetComponent<Coin>();
                 }
                 else
@@ -190,8 +194,6 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         private void OnP2ControllerRoomIsReady()
         {
-            Debug.Log("OnP2ControllerRoomIsReady");
-            
             if (PhotonNetwork.IsMasterClient)
             {
                 return;
