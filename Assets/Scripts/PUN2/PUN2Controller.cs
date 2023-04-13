@@ -275,6 +275,23 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             return _roomNames;
         }
 
+        public bool IsCurrentRoom => PhotonNetwork.CurrentRoom != null;
+
+        public int GetCurrentRoomSeed()
+        {
+            var room = PhotonNetwork.CurrentRoom;
+
+            if (!room.CustomProperties.ContainsKey("Seed"))
+            {
+                Debug.LogError("PUN2: Seed property is not saved in the room properties");
+                return - 1;
+            }
+
+            int roomSeed = (int)room.CustomProperties["Seed"];
+
+            return roomSeed;
+        }
+
         #endregion
         
         #region Private

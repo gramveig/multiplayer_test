@@ -23,7 +23,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
         private GameObject _roomNotFound;
 
         private bool _isInitialized;
-        
+
         private async void Start()
         {
             await UniTask.WaitUntil(() => PUN2Controller.Instance != null && PUN2Controller.Instance.IsInitialized);
