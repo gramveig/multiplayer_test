@@ -111,7 +111,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
             PUN2Controller.Instance.RaiseRoomIsReadyEvent();
         }
 
-        private void ScatterCoins()
+        private async void ScatterCoins()
         {
             const float Margin = 0.5f;
             
@@ -125,14 +125,10 @@ namespace AlexeyVlasyuk.MultiplayerTest
                 if (!_isTestMode)
                 {
                     var coinObj = PhotonNetwork.InstantiateRoomObject(_coinPrefab, pos, Quaternion.identity);
-                    if (coinObj == null)
-                    {
-                        Debug.LogError("Instantiate returned null object for coin " + i);
-                    }
-                    else
-                    {
-                        coin = coinObj.GetComponent<Coin>();
-                    }
+
+                    await UniTask.WaitUntil(() => coinObj != null);
+                    
+                    coin = coinObj.GetComponent<Coin>();
                 }
                 else
                 {
@@ -140,10 +136,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
                     coin = Instantiate(coinPrefab, pos, Quaternion.identity);
                 }
 
-                if (coin != null)
-                {
-                    coin.Init(OnCoinPicked);
-                }
+                coin.Init(OnCoinPicked);
             }
         }
 
