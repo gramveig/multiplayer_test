@@ -23,6 +23,9 @@ namespace AlexeyVlasyuk.MultiplayerTest
         [SerializeField]
         private FixedJoystick _coordJoyst;
         
+        [SerializeField]
+        private FixedJoystick _rotationJoyst;
+        
         private Camera _cam;
         private Vector2 _worldBtmLeftCorner;
         private Vector2 _worldTopRightCorner;
@@ -60,6 +63,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
             if (_player != null)
             {
                 _player.UpdateCoord(_coordJoyst.Horizontal, _coordJoyst.Vertical);
+                _player.UpdateRotation(_rotationJoyst.Horizontal, _rotationJoyst.Vertical);
             }
         }
         
