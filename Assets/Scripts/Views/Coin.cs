@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 using Action = System.Action;
 
@@ -17,7 +18,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
             if (col.CompareTag("Player"))
             {
                 _onPicked?.Invoke();
-                Destroy(gameObject);
+                PhotonNetwork.Destroy(gameObject);
             }
         }
     }
