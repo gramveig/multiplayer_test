@@ -26,11 +26,20 @@ namespace AlexeyVlasyuk.MultiplayerTest
         
         [SerializeField]
         private FixedJoystick _rotationJoyst;
+
+        [SerializeField]
+        private Canvas _joystCanvas;
+        
+        [SerializeField]
+        private Canvas _uiCanvas;
         
         private Camera _cam;
         private Player _player;
         private bool _isTestMode;
-        
+        private bool _isRoomBuilt;
+        private bool _isGameStarted;
+        private int _roomSeed;
+
         private async void Start()
         {
             await UniTask.WaitUntil(() => PUN2Controller.Instance != null && PUN2Controller.Instance.IsInitialized);
@@ -39,19 +48,36 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
             Subscribe();
 
-            int roomSeed;
             if (PUN2Controller.Instance.IsCurrentRoom)
             {
-                roomSeed = PUN2Controller.Instance.GetCurrentRoomSeed();
+                _roomSeed = PUN2Controller.Instance.GetCurrentRoomSeed();
+
+                if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount == 0)
+                {
+                    //cover screen with waiting for players message if must wait for other players
+                    _joystCanvas.enabled = false;
+                    _uiCanvas.enabled = true;
+                }
+                else
+                {
+                    _joystCanvas.enabled = true;
+                    _uiCanvas.enabled = false;
+                    _isGameStarted = true;
+                }
             }
             else
             {
                 Debug.Log("No current room defined. Scene is running in test mode");
                 _isTestMode = true;
-                roomSeed = PUN2Controller.Instance.GetRandomSeed();
+                _roomSeed = PUN2Controller.Instance.GetRandomSeed();
             }
 
-            CreateRoom(roomSeed);
+            //start building room immediately if master client.
+            //Otherwise waiting for RoomIsReady net event
+            if (PhotonNetwork.IsMasterClient)
+            {
+                CreateRoom(_roomSeed);
+            }
         }
 
         private void OnDestroy()
@@ -61,6 +87,11 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         private void Update()
         {
+            if (!_isRoomBuilt || !_isGameStarted)
+            {
+                return;
+            }
+
             if (_player != null)
             {
                 _player.UpdateCoord(_coordJoyst.Horizontal, _coordJoyst.Vertical);
@@ -74,6 +105,8 @@ namespace AlexeyVlasyuk.MultiplayerTest
             AddPlayer();
             Random.InitState(roomSeed);
             ScatterCoins();
+            _isRoomBuilt = true;
+            PUN2Controller.Instance.RaiseRoomIsReadyEvent();
         }
 
         private void ScatterCoins()
@@ -115,11 +148,15 @@ namespace AlexeyVlasyuk.MultiplayerTest
         private void Subscribe()
         {
             PUN2Controller.Instance.OnP2ControllerDisconnected += OnP2ControllerDisconnected;
+            PUN2Controller.Instance.OnP2ControllerOtherPlayersJoinedRoom += OnP2ControllerOtherPlayersJoinedRoom;
+            PUN2Controller.Instance.OnP2ControllerRoomIsReady += OnP2ControllerRoomIsReady;
         }
 
         private void Unsubscribe()
         {
             PUN2Controller.Instance.OnP2ControllerDisconnected -= OnP2ControllerDisconnected;
+            PUN2Controller.Instance.OnP2ControllerOtherPlayersJoinedRoom -= OnP2ControllerOtherPlayersJoinedRoom;
+            PUN2Controller.Instance.OnP2ControllerRoomIsReady -= OnP2ControllerRoomIsReady;
         }
         
         private void OnP2ControllerDisconnected()
@@ -140,6 +177,23 @@ namespace AlexeyVlasyuk.MultiplayerTest
         public void OnFireReleased()
         {
             _player.StopFire();
+        }
+
+        private void OnP2ControllerOtherPlayersJoinedRoom()
+        {
+            _joystCanvas.enabled = true;
+            _uiCanvas.enabled = false;
+            _isGameStarted = true;
+        }
+
+        private void OnP2ControllerRoomIsReady()
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                return;
+            }
+            
+            CreateRoom(_roomSeed);
         }
     }
 }

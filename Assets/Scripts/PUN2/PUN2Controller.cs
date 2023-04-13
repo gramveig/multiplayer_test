@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates;
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -7,6 +8,11 @@ using Action = System.Action;
 
 namespace AlexeyVlasyuk.MultiplayerTest.PUN2
 {
+    public enum PUN2CustomEvents : byte
+    {
+        RoomIsReady
+    };
+    
     public class PUN2Controller : MonoBehaviourPunCallbacks
     {
         [SerializeField]
@@ -27,6 +33,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         public event Action OnP2ControllerFollowingClientJoinedRoom;
         public event Action OnP2ControllerCannotJoinRoom;
         public event Action OnP2ControllerOtherPlayersJoinedRoom;
+        public event Action OnP2ControllerRoomIsReady;
 
         //connection states
         public PUN2ConnectionState csDisconnected { get; private set; }
@@ -42,6 +49,13 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
 
         public readonly TypedLobby customLobby = new TypedLobby("MultiplayerTestLobby", LobbyType.Default);
 
+        public readonly RaiseEventOptions CommonRaiseEventOpts = new RaiseEventOptions
+        {
+            Receivers = ReceiverGroup.Others,
+            CachingOption = EventCaching.AddToRoomCache
+        };
+        public readonly SendOptions CommonSendOpts = SendOptions.SendReliable;
+        
         //max player in room
         private const byte MaxPlayersInRoom = 20; //20 is a free PUN version limit
         
@@ -89,6 +103,20 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         void Update()
         {
             _connectionState?.Update();
+        }
+
+        public override void OnEnable()
+        {
+            base.OnEnable();
+
+            PhotonNetwork.NetworkingClient.EventReceived += OnCustomPUN2Event;
+        }
+
+        public override void OnDisable()
+        {
+            base.OnDisable();
+
+            PhotonNetwork.NetworkingClient.EventReceived -= OnCustomPUN2Event;
         }
 
         #endregion
@@ -316,6 +344,16 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             return Random.Range(int.MinValue, int.MaxValue);
         }
 
+        public void RaiseRoomIsReadyEvent()
+        {
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                return;
+            }
+
+            PhotonNetwork.RaiseEvent((byte)PUN2CustomEvents.RoomIsReady, null, CommonRaiseEventOpts, CommonSendOpts);
+        }
+
         #endregion
         
         #region Private
@@ -332,6 +370,16 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             csJoinRoom = new P2CJoinRoom(this);
             csWaitForPlayers = new P2CWaitForPlayers(this);
             csInGame = new P2CInGame(this);
+        }
+        
+        private void OnCustomPUN2Event(EventData photonEvent)
+        {
+            PUN2CustomEvents eventCode = (PUN2CustomEvents)photonEvent.Code;
+
+            switch (eventCode)
+            {
+                case PUN2CustomEvents.RoomIsReady: OnP2ControllerRoomIsReady?.Invoke(); break;
+            }
         }
 
         #endregion
