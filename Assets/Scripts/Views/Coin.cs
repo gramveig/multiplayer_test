@@ -26,7 +26,6 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
             {
                 _onPicked?.Invoke();
                 NetworkDestroy();
-                PhotonNetwork.Destroy(gameObject);
             }
         }
 
