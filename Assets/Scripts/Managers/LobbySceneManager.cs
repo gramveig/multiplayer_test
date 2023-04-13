@@ -15,6 +15,9 @@ namespace AlexeyVlasyuk.MultiplayerTest
         [SerializeField]
         private TMP_InputField _joinRoomInput;
 
+        [SerializeField]
+        private TMP_Text _foundRooms;
+        
         private bool _isInitialized;
         
         private async void Start()
@@ -68,6 +71,37 @@ namespace AlexeyVlasyuk.MultiplayerTest
             }
 
             PUN2Controller.Instance.JoinRoom(roomName);
+        }
+
+        public void OnJoinRoomNameChanged()
+        {
+            const int MaxNames = 3;
+            
+            string roomName = _joinRoomInput.text;
+            if (string.IsNullOrEmpty(roomName))
+            {
+                return;
+            }
+
+            var foundNames = PUN2Controller.Instance.GetRoomNames(roomName, MaxNames);
+            if (foundNames.Count == 0)
+            {
+                _foundRooms.text = "";
+                return;
+            }
+            
+            string names = "Found rooms: ";
+            for (int i = 0; i < foundNames.Count; i++)
+            {
+                string name = foundNames[i];
+                names += name;
+                if (i < foundNames.Count - 1)
+                {
+                    names += ", ";
+                }
+            }
+
+            _foundRooms.text = names;
         }
         
         private void Subscribe()

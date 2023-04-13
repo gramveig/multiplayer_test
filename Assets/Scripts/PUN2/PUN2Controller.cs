@@ -16,6 +16,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         private PUN2ConnectionState _connectionState;
         private SortedDictionary<string, RoomInfo> _cachedRoomList = new ();
         private string _roomName;
+        private List<string> _roomNames = new ();
 
         public bool IsInitialized { get; private set; }
         public bool IsReadyToSendReceiveEvents { get; set; }
@@ -252,6 +253,26 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         public void CallOnCannotJoinRoomEvent()
         {
             OnP2ControllerCannotJoinRoom?.Invoke();
+        }
+
+        public List<string> GetRoomNames(string nameStart, int maxNames)
+        {
+            _roomNames.Clear();
+            foreach (KeyValuePair<string, RoomInfo> keyValuePair in _cachedRoomList)
+            {
+                string roomName = keyValuePair.Key;
+                if (roomName.StartsWith(nameStart))
+                {
+                    _roomNames.Add(roomName);
+                }
+
+                if (_roomNames.Count >= maxNames)
+                {
+                    break;
+                }
+            }
+
+            return _roomNames;
         }
 
         #endregion
