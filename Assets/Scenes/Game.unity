@@ -173,7 +173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _numCoins: 40
-  _coinPrefab: {fileID: -4636140809625175442, guid: d4ca2e46eb858e94c9cee597175e6d07, type: 3}
+  _coinPrefab: GoldCoin
   _borders: {fileID: 1925042014}
   _playerPrefab: {fileID: 6531042890501830100, guid: 4d12c03a2636ed74986618d1babde0fd, type: 3}
   _coordJoyst: {fileID: 760136151}
