@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates
 {
-    public class P2CCreateRoom : PUN2ConnectionState
+    public class P2CJoinRoom : PUN2ConnectionState
     {
-        public P2CCreateRoom(PUN2Controller p2c)
+        public P2CJoinRoom(PUN2Controller p2c)
         {
             this.p2c = p2c;
         }
@@ -19,24 +19,19 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates
                 return;
             }
 
-            p2c.StartRoomCreation();
-        }
-
-        public override void OnCreatedRoom()
-        {
-            Debug.Log("PUN2: Successfully created new room");
+            p2c.StartJoinRoom();
         }
 
         public override void OnJoinedRoom()
         {
-            Debug.Log("PUN2: Successfully joined created room (or the existing one, if the room with the same name already existed)");
-            p2c.CallOnCannotJoinRoomEvent();
+            Debug.Log("PUN2: Successfully joined room");
+            p2c.CallOnJoinedRoomEvent();
         }
 
         public override void OnJoinRoomFailed(short returnCode, string message)
         {
             Debug.Log($"PUN2: Unable to join room. Return code: {returnCode}. Message: {message}");
-            p2c.CallOnDisconnectEvent();
+            p2c.CallOnCannotJoinRoomEvent();
         }
     }
 }

@@ -20,8 +20,10 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         public bool IsInitialized { get; private set; }
         public bool IsReadyToSendReceiveEvents { get; set; }
 
-        public event Action OnControllerDisconnected;
-        public event Action OnConnectedToLobby;
+        public event Action OnP2ControllerDisconnected;
+        public event Action OnP2ControllerConnectedToLobby;
+        public event Action OnP2ControllerJoinedRoom;
+        public event Action OnP2ControllerCannotJoinRoom;
 
         //connection states
         public PUN2ConnectionState csDisconnected { get; private set; }
@@ -31,6 +33,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         public PUN2ConnectionState csWaitBeforeRejoinLobby { get; private set; }
         public PUN2ConnectionState csInLobby { get; private set; }
         public P2CCreateRoom csCreateRoom { get; private set; }
+        public P2CJoinRoom csJoinRoom { get; private set; }
 
         public readonly TypedLobby customLobby = new TypedLobby("MultiplayerTestLobby", LobbyType.Default);
 
@@ -122,12 +125,12 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
 
         public void CallOnDisconnectEvent()
         {
-            OnControllerDisconnected?.Invoke();
+            OnP2ControllerDisconnected?.Invoke();
         }
 
         public void CallOnConnectedToLobby()
         {
-            OnConnectedToLobby?.Invoke();
+            OnP2ControllerConnectedToLobby?.Invoke();
         }
 
         public bool IsDetailedLog
@@ -162,11 +165,14 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
                 Debug.LogError("PUN2: cannot create room: room name is empty");
                 return;
             }
-            
+
             _roomName = roomName;
             SetConnectionState(csCreateRoom);
         }
 
+        /// <summary>
+        /// Called from create room state
+        /// </summary>
         public void StartRoomCreation()
         {
             if (string.IsNullOrEmpty(_roomName))
@@ -189,15 +195,45 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
                 }
             };
 
+            Debug.Log($"Player {PhotonNetwork.NickName} has attempted to create room {_roomName} or join the room with the same name if it's already created");
+
             bool result = PhotonNetwork.JoinOrCreateRoom(_roomName, roomOptions, customLobby);
             if (!result)
             {
-                Debug.Log("PUN2: Unable to create or join game");
+                Debug.Log("PUN2: Unable to create or join room");
                 CallOnDisconnectEvent();
+            }
+        }
+
+        public void JoinRoom(string roomName)
+        {
+            if (string.IsNullOrEmpty(roomName))
+            {
+                Debug.LogError("PUN2: cannot join room: room name is empty");
                 return;
             }
 
-            Debug.Log($"Player {PhotonNetwork.NickName} has attempted to create room {_roomName} or join the room with the same name if it's already created");
+            _roomName = roomName;
+
+            SetConnectionState(csJoinRoom);
+        }
+
+        public void StartJoinRoom()
+        {
+            if (string.IsNullOrEmpty(_roomName))
+            {
+                Debug.LogError("PUN2: cannot join room: room name is not defined");
+                SetConnectionState(csInLobby);
+                return;
+            }
+
+            Debug.Log($"Player {PhotonNetwork.NickName} has attempted to join room {_roomName}");
+            bool result = PhotonNetwork.JoinRoom(_roomName);
+            if (!result)
+            {
+                Debug.Log("PUN2: Unable to join room");
+                CallOnCannotJoinRoomEvent();
+            }
         }
 
         public void AssureDisconnection()
@@ -206,6 +242,16 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             {
                 PhotonNetwork.Disconnect();
             }
+        }
+
+        public void CallOnJoinedRoomEvent()
+        {
+            OnP2ControllerJoinedRoom?.Invoke();
+        }
+
+        public void CallOnCannotJoinRoomEvent()
+        {
+            OnP2ControllerCannotJoinRoom?.Invoke();
         }
 
         #endregion
@@ -221,6 +267,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             csWaitBeforeRejoinLobby = new P2CWaitBeforeRejoinLobby(this);
             csInLobby = new P2CInLobby(this);
             csCreateRoom = new P2CCreateRoom(this);
+            csJoinRoom = new P2CJoinRoom(this);
         }
 
         #endregion

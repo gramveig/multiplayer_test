@@ -67,29 +67,43 @@ namespace AlexeyVlasyuk.MultiplayerTest
                 return;
             }
 
-            Debug.Log("Joining room: " + roomName);
+            PUN2Controller.Instance.JoinRoom(roomName);
         }
         
         private void Subscribe()
         {
-            PUN2Controller.Instance.OnControllerDisconnected += OnControllerDisconnected;
-            PUN2Controller.Instance.OnConnectedToLobby += OnConnectedToLobby;
+            PUN2Controller.Instance.OnP2ControllerDisconnected += OnP2ControllerDisconnected;
+            PUN2Controller.Instance.OnP2ControllerConnectedToLobby += OnP2ControllerConnectedToLobby;
+            PUN2Controller.Instance.OnP2ControllerJoinedRoom += OnP2ControllerJoinedRoom;
+            PUN2Controller.Instance.OnP2ControllerCannotJoinRoom += OnP2ControllerCannotJoinRoom;
         }
 
         private void Unsubscribe()
         {
-            PUN2Controller.Instance.OnControllerDisconnected -= OnControllerDisconnected;
-            PUN2Controller.Instance.OnConnectedToLobby -= OnConnectedToLobby;
+            PUN2Controller.Instance.OnP2ControllerDisconnected -= OnP2ControllerDisconnected;
+            PUN2Controller.Instance.OnP2ControllerConnectedToLobby -= OnP2ControllerConnectedToLobby;
+            PUN2Controller.Instance.OnP2ControllerJoinedRoom -= OnP2ControllerJoinedRoom;
+            PUN2Controller.Instance.OnP2ControllerCannotJoinRoom -= OnP2ControllerCannotJoinRoom;
         }
-        
-        private void OnControllerDisconnected()
+
+        private void OnP2ControllerDisconnected()
         {
             SceneManager.LoadScene("Disconnect");
         }
 
-        private void OnConnectedToLobby()
+        private void OnP2ControllerConnectedToLobby()
         {
             _isInitialized = true;
+        }
+
+        private void OnP2ControllerJoinedRoom()
+        {
+            
+        }
+
+        private void OnP2ControllerCannotJoinRoom()
+        {
+            
         }
     }
 }

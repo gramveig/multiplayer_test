@@ -24,22 +24,22 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         private void Subscribe()
         {
-            PUN2Controller.Instance.OnControllerDisconnected += OnControllerDisconnected;
-            PUN2Controller.Instance.OnConnectedToLobby += OnConnectedToLobby;
+            PUN2Controller.Instance.OnP2ControllerDisconnected += OnP2ControllerDisconnected;
+            PUN2Controller.Instance.OnP2ControllerConnectedToLobby += OnP2ControllerConnectedToLobby;
         }
 
         private void Unsubscribe()
         {
-            PUN2Controller.Instance.OnControllerDisconnected -= OnControllerDisconnected;
-            PUN2Controller.Instance.OnConnectedToLobby -= OnConnectedToLobby;
+            PUN2Controller.Instance.OnP2ControllerDisconnected -= OnP2ControllerDisconnected;
+            PUN2Controller.Instance.OnP2ControllerConnectedToLobby -= OnP2ControllerConnectedToLobby;
         }
         
-        private void OnControllerDisconnected()
+        private void OnP2ControllerDisconnected()
         {
             SceneManager.LoadScene("Disconnect");
         }
 
-        private void OnConnectedToLobby()
+        private void OnP2ControllerConnectedToLobby()
         {
             SceneManager.LoadScene("Lobby");
         }
