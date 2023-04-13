@@ -15,6 +15,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         private static PUN2Controller _instance;
         private PUN2ConnectionState _connectionState;
         private SortedDictionary<string, RoomInfo> _cachedRoomList = new ();
+        private string _roomName;
 
         public bool IsInitialized { get; private set; }
         public bool IsReadyToSendReceiveEvents { get; set; }
@@ -29,9 +30,13 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         public PUN2ConnectionState csJoiningLobby { get; private set; }
         public PUN2ConnectionState csWaitBeforeRejoinLobby { get; private set; }
         public PUN2ConnectionState csInLobby { get; private set; }
+        public P2CCreateRoom csCreateRoom { get; private set; }
 
         public readonly TypedLobby customLobby = new TypedLobby("MultiplayerTestLobby", LobbyType.Default);
 
+        //max player in room
+        private const byte MaxPlayersInRoom = 20; //20 is a free PUN version limit
+        
         public enum LogLevel
         {
             Normal,
@@ -150,6 +155,59 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
 
         public bool IsInLobby => _connectionState == csInLobby;
 
+        public void CreateRoom(string roomName)
+        {
+            if (string.IsNullOrEmpty(roomName))
+            {
+                Debug.LogError("PUN2: cannot create room: room name is empty");
+                return;
+            }
+            
+            _roomName = roomName;
+            SetConnectionState(csCreateRoom);
+        }
+
+        public void StartRoomCreation()
+        {
+            if (string.IsNullOrEmpty(_roomName))
+            {
+                Debug.LogError("PUN2: cannot create room: room name is not defined");
+                SetConnectionState(csInLobby);
+                return;
+            }
+
+            int roomSeed = Random.Range(int.MinValue, int.MaxValue);
+
+            RoomOptions roomOptions = new RoomOptions
+            {
+                IsOpen = true,
+                IsVisible = true,
+                MaxPlayers = MaxPlayersInRoom,
+                CustomRoomProperties = new ExitGames.Client.Photon.Hashtable
+                {
+                    { "Seed", roomSeed }
+                }
+            };
+
+            bool result = PhotonNetwork.JoinOrCreateRoom(_roomName, roomOptions, customLobby);
+            if (!result)
+            {
+                Debug.Log("PUN2: Unable to create or join game");
+                CallOnDisconnectEvent();
+                return;
+            }
+
+            Debug.Log($"Player {PhotonNetwork.NickName} has attempted to create room {_roomName} or join the room with the same name if it's already created");
+        }
+
+        public void AssureDisconnection()
+        {
+            if (PhotonNetwork.IsConnected)
+            {
+                PhotonNetwork.Disconnect();
+            }
+        }
+
         #endregion
         
         #region Private
@@ -162,6 +220,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             csJoiningLobby = new P2CJoiningLobby(this);
             csWaitBeforeRejoinLobby = new P2CWaitBeforeRejoinLobby(this);
             csInLobby = new P2CInLobby(this);
+            csCreateRoom = new P2CCreateRoom(this);
         }
 
         #endregion

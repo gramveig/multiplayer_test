@@ -51,7 +51,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
                 return;
             }
 
-            Debug.Log("Creating room: " + roomName);
+            PUN2Controller.Instance.CreateRoom(roomName);
         }
         
         public void OnJoinRoomPressed()
