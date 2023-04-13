@@ -52,7 +52,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
             {
                 _roomSeed = PUN2Controller.Instance.GetCurrentRoomSeed();
 
-                if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount == 0)
+                if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount < 2)
                 {
                     //cover screen with waiting for players message if must wait for other players
                     _joystCanvas.enabled = false;
