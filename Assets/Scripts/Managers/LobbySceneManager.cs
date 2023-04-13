@@ -80,6 +80,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
             string roomName = _joinRoomInput.text;
             if (string.IsNullOrEmpty(roomName))
             {
+                _foundRooms.text = "";
                 return;
             }
 
