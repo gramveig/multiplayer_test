@@ -17,6 +17,9 @@ namespace AlexeyVlasyuk.MultiplayerTest
         [SerializeField]
         private Borders _borders;
 
+        [SerializeField]
+        private Player _playerPrefab;
+        
         private Camera _cam;
         private Vector2 _worldBtmLeftCorner;
         private Vector2 _worldTopRightCorner;
@@ -53,6 +56,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
             Random.InitState(roomSeed);
             _borders.Generate();
             ScatterGold();
+            AddPlayer();
         }
 
         private void ScatterGold()
@@ -69,6 +73,12 @@ namespace AlexeyVlasyuk.MultiplayerTest
             }
         }
 
+        private void AddPlayer()
+        {
+            var pos = new Vector2();
+            Instantiate(_playerPrefab, pos, Quaternion.identity);
+        }
+        
         private void Subscribe()
         {
             PUN2Controller.Instance.OnP2ControllerDisconnected += OnP2ControllerDisconnected;
