@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using AlexeyVlasyuk.MultiplayerTest.PUN2;
 using Cysharp.Threading.Tasks;
 using TMPro;
@@ -19,6 +20,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
         private TMP_Text _foundRooms;
         
         private bool _isInitialized;
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         
         private async void Start()
         {
@@ -102,6 +104,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
                 }
             }
 
+            _cancellationTokenSource.Cancel(true);
             _foundRooms.text = names;
         }
         
@@ -138,7 +141,14 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         private void OnP2ControllerCannotJoinRoom()
         {
-            
+            ShowAbsentRoomWarning();
+        }
+
+        private async void ShowAbsentRoomWarning()
+        {
+            _foundRooms.text = "Room not found";
+            await UniTask.Delay(3000, cancellationToken: _cancellationTokenSource.Token);
+            _foundRooms.text = "";
         }
     }
 }
