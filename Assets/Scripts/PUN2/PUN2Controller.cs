@@ -25,6 +25,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         public event Action OnP2ControllerConnectedToLobby;
         public event Action OnP2ControllerJoinedRoom;
         public event Action OnP2ControllerCannotJoinRoom;
+        public event Action OnP2ControllerOtherPlayersJoinedRoom;
 
         //connection states
         public PUN2ConnectionState csDisconnected { get; private set; }
@@ -35,6 +36,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         public PUN2ConnectionState csInLobby { get; private set; }
         public P2CCreateRoom csCreateRoom { get; private set; }
         public P2CJoinRoom csJoinRoom { get; private set; }
+        public P2CWaitForPlayers csWaitForPlayers { get; private set; }
 
         public readonly TypedLobby customLobby = new TypedLobby("MultiplayerTestLobby", LobbyType.Default);
 
@@ -196,7 +198,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
                 }
             };
 
-            Debug.Log($"Player {PhotonNetwork.NickName} has attempted to create room {_roomName} or join the room with the same name if it's already created");
+            Debug.Log($"Player {PhotonNetwork.NickName} has attempted to create room '{_roomName}' or join the room with the same name if it's already created");
 
             bool result = PhotonNetwork.JoinOrCreateRoom(_roomName, roomOptions, customLobby);
             if (!result)
@@ -253,6 +255,11 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         public void CallOnCannotJoinRoomEvent()
         {
             OnP2ControllerCannotJoinRoom?.Invoke();
+        }
+
+        public void CallOnOtherPlayersJoinedRoom()
+        {
+            OnP2ControllerOtherPlayersJoinedRoom?.Invoke();
         }
 
         public List<string> GetRoomNames(string nameStart, int maxNames)
@@ -316,6 +323,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             csInLobby = new P2CInLobby(this);
             csCreateRoom = new P2CCreateRoom(this);
             csJoinRoom = new P2CJoinRoom(this);
+            csWaitForPlayers = new P2CWaitForPlayers(this);
         }
 
         #endregion

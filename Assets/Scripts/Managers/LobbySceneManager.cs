@@ -142,7 +142,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         private void OnP2ControllerJoinedRoom()
         {
-            
+            SceneManager.LoadScene("WaitingForPlayers");
         }
 
         private void OnP2ControllerCannotJoinRoom()
