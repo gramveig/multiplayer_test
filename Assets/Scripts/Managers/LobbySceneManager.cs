@@ -118,8 +118,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
         {
             PUN2Controller.Instance.OnP2ControllerDisconnected += OnP2ControllerDisconnected;
             PUN2Controller.Instance.OnP2ControllerConnectedToLobby += OnP2ControllerConnectedToLobby;
-            PUN2Controller.Instance.OnP2ControllerMainClientJoinedRoom += OnP2ControllerMainClientJoinedRoom;
-            PUN2Controller.Instance.OnP2ControllerFollowingClientJoinedRoom += OnP2ControllerFollowingClientJoinedRoom;
+            PUN2Controller.Instance.OnP2ControllerJoinedRoom += OnP2ControllerJoinedRoom;
             PUN2Controller.Instance.OnP2ControllerCannotJoinRoom += OnP2ControllerCannotJoinRoom;
         }
 
@@ -127,8 +126,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
         {
             PUN2Controller.Instance.OnP2ControllerDisconnected -= OnP2ControllerDisconnected;
             PUN2Controller.Instance.OnP2ControllerConnectedToLobby -= OnP2ControllerConnectedToLobby;
-            PUN2Controller.Instance.OnP2ControllerMainClientJoinedRoom -= OnP2ControllerMainClientJoinedRoom;
-            PUN2Controller.Instance.OnP2ControllerFollowingClientJoinedRoom -= OnP2ControllerFollowingClientJoinedRoom;
+            PUN2Controller.Instance.OnP2ControllerJoinedRoom -= OnP2ControllerJoinedRoom;
             PUN2Controller.Instance.OnP2ControllerCannotJoinRoom -= OnP2ControllerCannotJoinRoom;
         }
 
@@ -142,18 +140,12 @@ namespace AlexeyVlasyuk.MultiplayerTest
             _isInitialized = true;
         }
 
-        private void OnP2ControllerMainClientJoinedRoom()
+        private void OnP2ControllerJoinedRoom()
         {
             PUN2Controller.Instance.DisableCustomPUN2Events();
             SceneManager.LoadScene("Game");
         }
 
-        private void OnP2ControllerFollowingClientJoinedRoom()
-        {
-            PUN2Controller.Instance.DisableCustomPUN2Events();
-            SceneManager.LoadScene("Game");
-        }
-        
         private void OnP2ControllerCannotJoinRoom()
         {
             ShowAbsentRoomWarning();

@@ -28,8 +28,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
 
         public event Action OnP2ControllerDisconnected;
         public event Action OnP2ControllerConnectedToLobby;
-        public event Action OnP2ControllerMainClientJoinedRoom;
-        public event Action OnP2ControllerFollowingClientJoinedRoom;
+        public event Action OnP2ControllerJoinedRoom;
         public event Action OnP2ControllerCannotJoinRoom;
         public event Action OnP2ControllerOtherPlayersJoinedRoom;
         public event Action OnP2ControllerRoomIsReady;
@@ -43,7 +42,6 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         public PUN2ConnectionState csInLobby { get; private set; }
         public P2CCreateRoom csCreateRoom { get; private set; }
         public P2CJoinRoom csJoinRoom { get; private set; }
-        public P2CWaitForPlayers csWaitForPlayers { get; private set; }
         public P2CInGame csInGame { get; private set; }
 
         public readonly TypedLobby customLobby = new TypedLobby("MultiplayerTestLobby", LobbyType.Default);
@@ -276,14 +274,9 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             }
         }
 
-        public void CallOnMainClientJoinedRoomEvent()
+        public void CallOnJoinedRoomEvent()
         {
-            OnP2ControllerMainClientJoinedRoom?.Invoke();
-        }
-
-        public void CallOnFollowingClientJoinedRoom()
-        {
-            OnP2ControllerFollowingClientJoinedRoom?.Invoke();
+            OnP2ControllerJoinedRoom?.Invoke();
         }
 
         public void CallOnCannotJoinRoomEvent()
@@ -379,7 +372,6 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             csInLobby = new P2CInLobby(this);
             csCreateRoom = new P2CCreateRoom(this);
             csJoinRoom = new P2CJoinRoom(this);
-            csWaitForPlayers = new P2CWaitForPlayers(this);
             csInGame = new P2CInGame(this);
         }
         
