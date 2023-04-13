@@ -18,9 +18,11 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         [SerializeField]
         private TMP_Text _foundRooms;
-        
+
+        [SerializeField]
+        private GameObject _roomNotFound;
+
         private bool _isInitialized;
-        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         
         private async void Start()
         {
@@ -78,7 +80,12 @@ namespace AlexeyVlasyuk.MultiplayerTest
         public void OnJoinRoomNameChanged()
         {
             const int MaxNames = 3;
-            
+
+            if (!_isInitialized)
+            {
+                return;
+            }
+
             string roomName = _joinRoomInput.text;
             if (string.IsNullOrEmpty(roomName))
             {
@@ -104,7 +111,6 @@ namespace AlexeyVlasyuk.MultiplayerTest
                 }
             }
 
-            _cancellationTokenSource.Cancel(true);
             _foundRooms.text = names;
         }
         
@@ -146,9 +152,11 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         private async void ShowAbsentRoomWarning()
         {
-            _foundRooms.text = "Room not found";
-            await UniTask.Delay(3000, cancellationToken: _cancellationTokenSource.Token);
-            _foundRooms.text = "";
+            _roomNotFound.SetActive(true);
+
+            await UniTask.Delay(3000);
+
+            _roomNotFound.SetActive(false);
         }
     }
 }
