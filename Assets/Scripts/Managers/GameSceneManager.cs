@@ -115,5 +115,10 @@ namespace AlexeyVlasyuk.MultiplayerTest
         {
             Debug.Log("On coin picked");
         }
+
+        public void OnFirePressed()
+        {
+            Debug.Log("Fire pressed");
+        }
     }
 }
