@@ -32,6 +32,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         public event Action OnP2ControllerCannotJoinRoom;
         public event Action OnP2ControllerOtherPlayersJoinedRoom;
         public event Action OnP2ControllerRoomIsReady;
+        public event Action OnP2ControllerRoomListUpdated;
 
         //connection states
         public PUN2ConnectionState csDisconnected { get; private set; }
@@ -181,7 +182,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
                     _cachedRoomList[info.Name] = info;
             }
 
-            //onGameZoneListChange?.Invoke(MultiplayerGameList);
+            OnP2ControllerRoomListUpdated?.Invoke();
 
             return _cachedRoomList.Count;
         }
@@ -358,6 +359,19 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             Debug.Log("PUN2: Custom PUN messages enabled");
         }
 
+        public bool IsRoomCreated(string roomName)
+        {
+            foreach (KeyValuePair<string, RoomInfo> keyValuePair in _cachedRoomList)
+            {
+                if (roomName == keyValuePair.Key)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        
         #endregion
         
         #region Private
