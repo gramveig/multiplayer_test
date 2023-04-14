@@ -160,9 +160,9 @@ namespace AlexeyVlasyuk.MultiplayerTest
         {
             var worldBtmLeftCorner = _cam.ScreenToWorldPoint(Vector3.zero);
             var worldTopRightCorner = _cam.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height));
-            var scrWidthUnits = worldTopRightCorner.x - worldBtmLeftCorner.x;
-            var scrHeightUnits = worldTopRightCorner.y - worldBtmLeftCorner.y;
-            var pos = new Vector2(Random.Range(-scrWidthUnits/2f, scrWidthUnits/2f), Random.Range(-scrHeightUnits/2f, scrHeightUnits/2f));
+            var scrWidthUnitsHalf = (worldTopRightCorner.x - worldBtmLeftCorner.x)/2f;
+            var scrHeightUnitsHalf = (worldTopRightCorner.y - worldBtmLeftCorner.y)/2f;
+            var pos = new Vector2(Random.Range(-scrWidthUnitsHalf/2f, scrWidthUnitsHalf/2f), Random.Range(-scrHeightUnitsHalf/2f, scrHeightUnitsHalf/2f));
             if (!_isTestMode)
             {
                 var playerObj = PhotonNetwork.Instantiate(_playerPrefab, pos, Quaternion.identity);
