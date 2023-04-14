@@ -10,7 +10,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.Models
         public GatheredCoins(int total)
         {
             _total = total;
-            _gathered = total;
+            _gathered = 0;
         }
 
         public void Add()

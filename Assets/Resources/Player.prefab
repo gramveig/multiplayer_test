@@ -102,6 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9893735d1a6b46169c8adfdccfc86d91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _healthPoints: 100
   _speedMovement: 10
   _speedRotation: 200
   _cannon: {fileID: 7846476288143040738}
