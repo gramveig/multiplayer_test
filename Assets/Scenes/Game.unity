@@ -257,7 +257,7 @@ MonoBehaviour:
   _joystCanvas: {fileID: 1955958406}
   _uiCanvas: {fileID: 1901559601}
   _playersCanvas: {fileID: 822725417}
-  _playerNamePrefab: {fileID: 1605258882609538233, guid: 228b4642b58392f49b57b5998390511a, type: 3}
+  _playerLabelPrefab: {fileID: 1605258882609538233, guid: 228b4642b58392f49b57b5998390511a, type: 3}
 --- !u!224 &142325439 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2929252283123773938, guid: aaa2c939c0359ac4dbce3f49e8b90252, type: 3}
