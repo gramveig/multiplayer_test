@@ -37,15 +37,23 @@ namespace AlexeyVlasyuk.MultiplayerTest
         private Canvas _playersCanvas;
 
         [SerializeField]
-        private PlayerName _playerNamePrefab;
-        
+        private PlayerName _playerLabelPrefab;
+
+        private static GameSceneManager _instance;
         private Camera _cam;
-        private Player _player;
+        private Player _localPlayer;
         private bool _isTestMode;
         private bool _isRoomBuilt;
         private bool _isGameStarted;
         private int _roomSeed;
 
+        #region Standard Unity Callbacks
+        
+        private void Awake()
+        {
+            _instance = this;
+        }
+        
         private async void Start()
         {
             await UniTask.WaitUntil(() => PUN2Controller.Instance != null && PUN2Controller.Instance.IsInitialized);
@@ -104,13 +112,31 @@ namespace AlexeyVlasyuk.MultiplayerTest
                 return;
             }
 
-            if (_player != null)
+            if (_localPlayer != null)
             {
-                _player.UpdateCoord(_coordJoyst.Horizontal, _coordJoyst.Vertical);
-                _player.UpdateRotation(_rotationJoyst.Horizontal, _rotationJoyst.Vertical);
+                _localPlayer.UpdateCoord(_coordJoyst.Horizontal, _coordJoyst.Vertical);
+                _localPlayer.UpdateRotation(_rotationJoyst.Horizontal, _rotationJoyst.Vertical);
             }
         }
 
+        #endregion
+
+        #region Public
+
+        public static GameSceneManager Instance => _instance;
+
+        public void OnCoinPicked()
+        {
+            Debug.Log("On coin picked");
+        }
+
+        public void OnPlayerInstantiated(Player player, string playerName)
+        {
+            AddPlayerLabel(player, playerName);
+        }
+
+        #endregion
+        
         private void ShowUI()
         {
             _joystCanvas.enabled = false;
@@ -143,26 +169,19 @@ namespace AlexeyVlasyuk.MultiplayerTest
             for (int i = 0; i < _numCoins; i++)
             {
                 var pos = new Vector2(Random.Range(worldBtmLeftCorner.x + Margin, worldTopRightCorner.x - Margin), Random.Range(worldBtmLeftCorner.y + Margin, worldTopRightCorner.y - Margin));
-                Coin coin = null;
                 if (!_isTestMode)
                 {
-                    var coinObj = PhotonNetwork.InstantiateRoomObject(_coinPrefab, pos, Quaternion.identity);
-                    //fix problem with slow instantiation of coins when using PhotonNetwork.Instantiate
-                    await UniTask.WaitUntil(() => coinObj != null);
-                    
-                    coin = coinObj.GetComponent<Coin>();
+                    PhotonNetwork.InstantiateRoomObject(_coinPrefab, pos, Quaternion.identity);
                 }
                 else
                 {
                     var coinPrefabObj = Resources.Load<Coin>(_coinPrefab);
-                    coin = Instantiate(coinPrefabObj, pos, Quaternion.identity);
+                    Instantiate(coinPrefabObj, pos, Quaternion.identity);
                 }
-
-                coin.Init(OnCoinPicked);
             }
         }
 
-        private async void AddPlayer()
+        private void AddPlayer()
         {
             var worldBtmLeftCorner = _cam.ScreenToWorldPoint(Vector3.zero);
             var worldTopRightCorner = _cam.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height));
@@ -172,22 +191,23 @@ namespace AlexeyVlasyuk.MultiplayerTest
             if (!_isTestMode)
             {
                 var playerObj = PhotonNetwork.Instantiate(_playerPrefab, pos, Quaternion.identity);
-                await UniTask.WaitUntil(() => playerObj != null);
-
-                _player = playerObj.GetComponent<Player>();
+                _localPlayer = playerObj.GetComponent<Player>();
             }
             else
             {
                 var playerPrefabObj = Resources.Load<Player>(_playerPrefab);
-                _player = Instantiate(playerPrefabObj, pos, Quaternion.identity);
+                _localPlayer = Instantiate(playerPrefabObj, pos, Quaternion.identity);
+                AddPlayerLabel(_localPlayer, "local player");
             }
-
-            pos = _cam.WorldToScreenPoint(_player.CachedTransform.position);
-            var playerName = Instantiate(_playerNamePrefab, pos, Quaternion.identity, _playersCanvas.transform);
-            string nickName = !_isTestMode ? PhotonNetwork.NickName : PUN2Controller.Instance.GetRandomPlayerName();
-            playerName.Init(nickName, _player);
         }
 
+        private void AddPlayerLabel(Player player, string nickName)
+        {
+            var pos = _cam.WorldToScreenPoint(player.CachedTransform.position);
+            var playerLabel = Instantiate(_playerLabelPrefab, pos, Quaternion.identity, _playersCanvas.transform);
+            playerLabel.Init(nickName, player);
+        }
+        
         private void Subscribe()
         {
             PUN2Controller.Instance.OnP2ControllerDisconnected += OnP2ControllerDisconnected;
@@ -207,19 +227,14 @@ namespace AlexeyVlasyuk.MultiplayerTest
             SceneManager.LoadScene("Disconnect");
         }
 
-        private void OnCoinPicked()
-        {
-            Debug.Log("On coin picked");
-        }
-
         public void OnFirePressed()
         {
-            _player.StartFire();
+            _localPlayer.StartFire();
         }
         
         public void OnFireReleased()
         {
-            _player.StopFire();
+            _localPlayer.StopFire();
         }
 
         private void OnP2ControllerOtherPlayersJoinedRoom()

@@ -7,7 +7,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
 {
     public class Coin : MonoBehaviour
     {
-        private Action _onPicked;
+        //private Action _onPicked;
         private PhotonView _photonView;
 
         private void Awake()
@@ -15,17 +15,23 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
             _photonView = GetComponent<PhotonView>();
         }
         
-        public void Init(Action onPicked)
-        {
-            Debug.Log("Coin init");
-            _onPicked = onPicked;
-        }
-
         public void OnTriggerEnter2D(Collider2D col)
         {
-            if (col.CompareTag("Player"))
+            if (!col.CompareTag("Player"))
             {
-                _onPicked?.Invoke();
+                return;
+            }
+
+            var player = col.GetComponent<Player>();
+            if (player == null)
+            {
+                Debug.LogError("Object tagged 'player' has no Player component on it");
+                return;
+            }
+
+            if (player.CachedPhotonView.IsMine)
+            {
+                player.OnCoinPicked();
                 NetworkDestroy();
             }
         }

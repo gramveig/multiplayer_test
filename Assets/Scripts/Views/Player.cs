@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AlexeyVlasyuk.MultiplayerTest.Views
 {
-    public class Player : MonoBehaviour
+    public class Player : MonoBehaviour, IPunInstantiateMagicCallback
     {
         [SerializeField]
         private float _speedMovement = 10f;
@@ -47,6 +47,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
         }
 
         public Transform CachedTransform => _transform;
+        public PhotonView CachedPhotonView => _photonView;
         
         public void StartFire()
         {
@@ -58,6 +59,18 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
             _photonView.RPC("OnNetworkStopFire", RpcTarget.All);
         }
 
+        public void OnCoinPicked()
+        {
+            //have to call GameSceneManager by instance here, as we cannot pass
+            //the reference to event from it to the network instantiated object
+            GameSceneManager.Instance.OnCoinPicked();
+        }
+
+        public void OnPhotonInstantiate(PhotonMessageInfo info)
+        {
+            GameSceneManager.Instance.OnPlayerInstantiated(this, info.Sender.NickName);
+        }
+        
         [PunRPC]
         private void OnNetworkStartFire()
         {
