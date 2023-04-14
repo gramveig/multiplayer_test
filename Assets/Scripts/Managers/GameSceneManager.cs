@@ -271,7 +271,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
         {
             PUN2Controller.Instance.OnP2ControllerConnectedToLobby -= OnP2ControllerConnectedToLobby;
 
-            if (PUN2Controller.Instance.IsRoomCreated(TestRoomName))
+            if (!PUN2Controller.Instance.IsRoomCreated(TestRoomName))
             {
                 PUN2Controller.Instance.CreateRoom(TestRoomName);
             }
