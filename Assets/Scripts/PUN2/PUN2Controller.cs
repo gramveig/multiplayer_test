@@ -32,7 +32,6 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         public event Action OnP2ControllerCannotJoinRoom;
         public event Action OnP2ControllerOtherPlayersJoinedRoom;
         public event Action OnP2ControllerRoomIsReady;
-        public event Action OnP2ControllerRoomListUpdated;
 
         //connection states
         public PUN2ConnectionState csDisconnected { get; private set; }
@@ -181,8 +180,6 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
                 else
                     _cachedRoomList[info.Name] = info;
             }
-
-            OnP2ControllerRoomListUpdated?.Invoke();
 
             return _cachedRoomList.Count;
         }
