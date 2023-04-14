@@ -55,7 +55,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         
         //max player in room
         private const byte MaxPlayersInRoom = 20; //20 is a free PUN version limit
-        
+
         public enum LogLevel
         {
             Normal,

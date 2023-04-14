@@ -9,7 +9,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
 
         private void OnDestroy()
         {
-            _model.Unsubscribe(this);
+            _model?.Unsubscribe(this);
         }
 
         public IObserver<GatheredCoins> Subscribe(IObservable<GatheredCoins> observable)

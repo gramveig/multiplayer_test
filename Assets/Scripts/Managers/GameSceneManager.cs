@@ -45,16 +45,17 @@ namespace AlexeyVlasyuk.MultiplayerTest
         
         [SerializeField]
         private CoinBar _coinBar;
-        
+
         private static GameSceneManager _instance;
         private Camera _cam;
         private Player _localPlayer;
-        private bool _isTestMode;
         private bool _isRoomBuilt;
         private bool _isGameStarted;
         private int _roomSeed;
         private GameModel _gameModel;
 
+        private const string TestRoomName = "Test Room";
+        
         #region Standard Unity Callbacks
         
         private void Awake()
@@ -76,33 +77,22 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
             if (PUN2Controller.Instance.IsCurrentRoom)
             {
-                _roomSeed = PUN2Controller.Instance.GetCurrentRoomSeed();
-
-                if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount < 2)
-                {
-                    //cover screen with waiting for players message if must wait for other players
-                    ShowUI();
-                }
-                else
-                {
-                    HideUI();
-                    _isGameStarted = true;
-                }
+                StartRoom();
             }
             else
             {
                 Debug.Log("No current room defined. Scene is running in test mode");
-                HideUI();
-                _isTestMode = true;
-                _isGameStarted = true;
-                _roomSeed = PUN2Controller.Instance.GetRandomSeed();
+                PUN2Controller.Instance.EnableCustomPun2Events();
+                PUN2Controller.Instance.ConectToServer();
+                PUN2Controller.Instance.OnP2ControllerConnectedToLobby += OnP2ControllerConnectedToLobby;
+                return;
             }
 
             PUN2Controller.Instance.EnableCustomPun2Events();
 
             //start building room immediately if master client.
             //Otherwise waiting for RoomIsReady net event
-            if (PhotonNetwork.IsMasterClient || _isTestMode)
+            if (PhotonNetwork.IsMasterClient)
             {
                 CreateRoom(_roomSeed);
             }
@@ -148,7 +138,17 @@ namespace AlexeyVlasyuk.MultiplayerTest
             _gameModel.AddDamageToPlayer(damage);
         }
 
-        public GameModel CurGameModel => _gameModel;
+        //called from screen joystick
+        public void OnFirePressed()
+        {
+            _localPlayer.StartFire();
+        }
+
+        //called from screen joystick
+        public void OnFireReleased()
+        {
+            _localPlayer.StopFire();
+        }
 
         #endregion
         
@@ -192,15 +192,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
             for (int i = 0; i < _numCoins; i++)
             {
                 var pos = new Vector2(Random.Range(worldBtmLeftCorner.x + Margin, worldTopRightCorner.x - Margin), Random.Range(worldBtmLeftCorner.y + Margin, worldTopRightCorner.y - Margin));
-                if (!_isTestMode)
-                {
-                    PhotonNetwork.InstantiateRoomObject(_coinPrefab, pos, Quaternion.identity);
-                }
-                else
-                {
-                    var coinPrefabObj = Resources.Load<Coin>(_coinPrefab);
-                    Instantiate(coinPrefabObj, pos, Quaternion.identity);
-                }
+                PhotonNetwork.InstantiateRoomObject(_coinPrefab, pos, Quaternion.identity);
             }
         }
 
@@ -211,17 +203,8 @@ namespace AlexeyVlasyuk.MultiplayerTest
             var scrWidthUnitsHalf = (worldTopRightCorner.x - worldBtmLeftCorner.x)/2f;
             var scrHeightUnitsHalf = (worldTopRightCorner.y - worldBtmLeftCorner.y)/2f;
             var pos = new Vector2(Random.Range(-scrWidthUnitsHalf/2f, scrWidthUnitsHalf/2f), Random.Range(-scrHeightUnitsHalf/2f, scrHeightUnitsHalf/2f));
-            if (!_isTestMode)
-            {
-                var playerObj = PhotonNetwork.Instantiate(_playerPrefab, pos, Quaternion.identity);
-                _localPlayer = playerObj.GetComponent<Player>();
-            }
-            else
-            {
-                var playerPrefabObj = Resources.Load<Player>(_playerPrefab);
-                _localPlayer = Instantiate(playerPrefabObj, pos, Quaternion.identity);
-                AddPlayerLabel(_localPlayer, "local player");
-            }
+            var playerObj = PhotonNetwork.Instantiate(_playerPrefab, pos, Quaternion.identity);
+            _localPlayer = playerObj.GetComponent<Player>();
         }
 
         private void AddPlayerLabel(Player player, string nickName)
@@ -250,16 +233,6 @@ namespace AlexeyVlasyuk.MultiplayerTest
             SceneManager.LoadScene("Disconnect");
         }
 
-        public void OnFirePressed()
-        {
-            _localPlayer.StartFire();
-        }
-        
-        public void OnFireReleased()
-        {
-            _localPlayer.StopFire();
-        }
-
         private void OnP2ControllerOtherPlayersJoinedRoom()
         {
             HideUI();
@@ -275,5 +248,40 @@ namespace AlexeyVlasyuk.MultiplayerTest
             
             CreateRoom(_roomSeed);
         }
+
+        private void StartRoom()
+        {
+            _roomSeed = PUN2Controller.Instance.GetCurrentRoomSeed();
+
+            if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount < 2)
+            {
+                //cover screen with waiting for players message if must wait for other players
+                ShowUI();
+            }
+            else
+            {
+                HideUI();
+                _isGameStarted = true;
+            }
+        }
+
+        #region Scene Debug Mode
+        
+        private void OnP2ControllerConnectedToLobby()
+        {
+            PUN2Controller.Instance.OnP2ControllerConnectedToLobby -= OnP2ControllerConnectedToLobby;
+            PUN2Controller.Instance.CreateRoom(TestRoomName);
+            PUN2Controller.Instance.OnP2ControllerJoinedRoom += OnP2ControllerJoinedRoom;
+        }
+
+        private void OnP2ControllerJoinedRoom()
+        {
+            PUN2Controller.Instance.OnP2ControllerJoinedRoom -= OnP2ControllerJoinedRoom;
+            StartRoom();
+            PUN2Controller.Instance.EnableCustomPun2Events();
+            CreateRoom(_roomSeed);
+        }
+        
+        #endregion
     }
 }
