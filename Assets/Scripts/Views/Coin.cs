@@ -17,6 +17,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
         
         public void Init(Action onPicked)
         {
+            Debug.Log("Coin init");
             _onPicked = onPicked;
         }
 
