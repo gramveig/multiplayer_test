@@ -251,7 +251,7 @@ MonoBehaviour:
   _numCoins: 40
   _coinPrefab: GoldCoin
   _borders: {fileID: 1925042014}
-  _playerPrefab: {fileID: 6531042890501830100, guid: 4d12c03a2636ed74986618d1babde0fd, type: 3}
+  _playerPrefab: Player
   _coordJoyst: {fileID: 760136151}
   _rotationJoyst: {fileID: 873669681}
   _joystCanvas: {fileID: 1955958406}
@@ -358,11 +358,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33ca1fb0231f41f590037b233ce85e43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wireColor: {r: 1, g: 1, b: 1, a: 1}
-  UnitsSize: 17
-  constraint: 1
-  camera: {fileID: 519420031}
-  executeInUpdate: 1
 --- !u!1001 &724528776
 PrefabInstance:
   m_ObjectHideFlags: 0
