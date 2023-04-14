@@ -17,13 +17,20 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
 
         private Transform _transform;
         private PhotonView _photonView;
-        
+
+        public event Action OnPlayerDestroyed;
+
         private void Awake()
         {
             _transform = transform;
             _photonView = GetComponent<PhotonView>();
         }
 
+        private void OnDestroy()
+        {
+            OnPlayerDestroyed?.Invoke();
+        }
+        
         public void UpdateCoord(float x, float y)
         {
             var direction = new Vector2(x, y);
@@ -39,6 +46,8 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _speedRotation * Time.deltaTime * magn);
         }
 
+        public Transform CachedTransform => _transform;
+        
         public void StartFire()
         {
             _photonView.RPC("OnNetworkStartFire", RpcTarget.All);

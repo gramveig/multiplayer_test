@@ -33,6 +33,12 @@ namespace AlexeyVlasyuk.MultiplayerTest
         [SerializeField]
         private Canvas _uiCanvas;
         
+        [SerializeField]
+        private Canvas _playersCanvas;
+
+        [SerializeField]
+        private PlayerName _playerNamePrefab;
+        
         private Camera _cam;
         private Player _player;
         private bool _isTestMode;
@@ -175,8 +181,13 @@ namespace AlexeyVlasyuk.MultiplayerTest
                 var playerPrefabObj = Resources.Load<Player>(_playerPrefab);
                 _player = Instantiate(playerPrefabObj, pos, Quaternion.identity);
             }
+
+            pos = _cam.WorldToScreenPoint(_player.CachedTransform.position);
+            var playerName = Instantiate(_playerNamePrefab, pos, Quaternion.identity, _playersCanvas.transform);
+            string nickName = !_isTestMode ? PhotonNetwork.NickName : PUN2Controller.Instance.GetRandomPlayerName();
+            playerName.Init(nickName, _player);
         }
-        
+
         private void Subscribe()
         {
             PUN2Controller.Instance.OnP2ControllerDisconnected += OnP2ControllerDisconnected;

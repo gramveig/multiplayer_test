@@ -40,6 +40,8 @@ MonoBehaviour:
   - Fire
   - RespawnSpaceship
   - OnNetworkDestroy
+  - OnNetworkStartFire
+  - OnNetworkStopFire
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
