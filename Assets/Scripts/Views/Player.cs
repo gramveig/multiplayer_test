@@ -1,4 +1,5 @@
 using System;
+using Photon.Pun;
 using UnityEngine;
 
 namespace AlexeyVlasyuk.MultiplayerTest.Views
@@ -15,10 +16,12 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
         private Cannon _cannon;
 
         private Transform _transform;
+        private PhotonView _photonView;
         
         private void Awake()
         {
             _transform = transform;
+            _photonView = GetComponent<PhotonView>();
         }
 
         public void UpdateCoord(float x, float y)
@@ -38,10 +41,22 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
 
         public void StartFire()
         {
-            _cannon.StartFire();
+            _photonView.RPC("OnNetworkStartFire", RpcTarget.All);
         }
         
         public void StopFire()
+        {
+            _photonView.RPC("OnNetworkStopFire", RpcTarget.All);
+        }
+
+        [PunRPC]
+        private void OnNetworkStartFire()
+        {
+            _cannon.StartFire();
+        }
+        
+        [PunRPC]
+        private void OnNetworkStopFire()
         {
             _cannon.StopFire();
         }
