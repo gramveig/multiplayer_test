@@ -7,6 +7,9 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
     public class Player : MonoBehaviour, IPunInstantiateMagicCallback
     {
         [SerializeField]
+        private float _healthPoints = 100;
+        
+        [SerializeField]
         private float _speedMovement = 10f;
         
         [SerializeField]
@@ -48,6 +51,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
 
         public Transform CachedTransform => _transform;
         public PhotonView CachedPhotonView => _photonView;
+        public float TotalHealth => _healthPoints;
         
         public void StartFire()
         {

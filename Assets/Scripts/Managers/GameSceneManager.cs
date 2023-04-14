@@ -1,3 +1,4 @@
+using AlexeyVlasyuk.MultiplayerTest.Models;
 using AlexeyVlasyuk.MultiplayerTest.PUN2;
 using AlexeyVlasyuk.MultiplayerTest.Views;
 using Cysharp.Threading.Tasks;
@@ -37,8 +38,14 @@ namespace AlexeyVlasyuk.MultiplayerTest
         private Canvas _playersCanvas;
 
         [SerializeField]
-        private PlayerName _playerLabelPrefab;
+        private PlayerLabel _playerLabelPrefab;
 
+        [SerializeField]
+        private HealthBar _healthBar;
+        
+        [SerializeField]
+        private CoinBar _coinBar;
+        
         private static GameSceneManager _instance;
         private Camera _cam;
         private Player _localPlayer;
@@ -46,6 +53,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
         private bool _isRoomBuilt;
         private bool _isGameStarted;
         private int _roomSeed;
+        private GameModel _gameModel;
 
         #region Standard Unity Callbacks
         
@@ -127,7 +135,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         public void OnCoinPicked()
         {
-            Debug.Log("On coin picked");
+            _gameModel.AddCoin();
         }
 
         public void OnPlayerInstantiated(Player player, string playerName)
@@ -137,8 +145,10 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         public void OnPlayerHit(float damage)
         {
-            Debug.Log($"Player is hit with {damage} damage");
+            _gameModel.AddDamageToPlayer(damage);
         }
+
+        public GameModel CurGameModel => _gameModel;
 
         #endregion
         
@@ -161,9 +171,17 @@ namespace AlexeyVlasyuk.MultiplayerTest
             Random.InitState(roomSeed);
             ScatterCoins();
             _isRoomBuilt = true;
+            OnRoomCreated();
             PUN2Controller.Instance.RaiseRoomIsReadyEvent();
         }
 
+        private void OnRoomCreated()
+        {
+            _gameModel = new GameModel(_localPlayer.TotalHealth, _numCoins);
+            _gameModel.AddCoinObserver(_coinBar);
+            _gameModel.AddHealthObserver(_healthBar);
+        }
+        
         private void ScatterCoins()
         {
             const float Margin = 2f;
