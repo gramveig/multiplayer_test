@@ -12,7 +12,6 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
         [SerializeField]
         private float _speed = 100f;
 
-        private Action<float> _onHit;
         private Transform _transform;
         private ObjectPool<Projectile> _pool;
 
@@ -21,9 +20,8 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
             _transform = transform;
         }
 
-        public void Init(Action<float> onHit, ObjectPool<Projectile> pool)
+        public void Init(ObjectPool<Projectile> pool)
         {
-            _onHit = onHit;
             _pool = pool;
         }
 
@@ -38,7 +36,18 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
         {
             if (col.CompareTag("Player"))
             {
-                _onHit?.Invoke(_damage);
+                var player = col.GetComponent<Player>();
+                if (player == null)
+                {
+                    Debug.LogError("Object tagged 'player' has no Player component on it");
+                    return;
+                }
+
+                if (player.CachedPhotonView.IsMine)
+                {
+                    GameSceneManager.Instance.OnPlayerHit(_damage);
+                }
+
                 ReturnToPool();
             }
             else if (col.CompareTag("Border"))

@@ -135,6 +135,11 @@ namespace AlexeyVlasyuk.MultiplayerTest
             AddPlayerLabel(player, playerName);
         }
 
+        public void OnPlayerHit(float damage)
+        {
+            Debug.Log($"Player is hit with {damage} damage");
+        }
+
         #endregion
         
         private void ShowUI()

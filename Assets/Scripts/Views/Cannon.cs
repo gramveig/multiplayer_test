@@ -36,7 +36,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
         private Projectile InstantiateProjectile()
         {
             var projectile = Instantiate(_projectilePrefab, IniPos, _transform.rotation);
-            projectile.Init(OnProjectileHit, _projectilePool);
+            projectile.Init(_projectilePool);
 
             return projectile;
         }
@@ -56,11 +56,6 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
             var projectile = _projectilePool.Draw();
             projectile.CachedTransform.position = IniPos;
             projectile.CachedTransform.localRotation = _transform.rotation;
-        }
-
-        private void OnProjectileHit(float damage)
-        {
-            
         }
 
         private Vector3 IniPos => _transform.position
