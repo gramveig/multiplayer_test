@@ -163,7 +163,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
             var scrWidthUnits = worldTopRightCorner.x - worldBtmLeftCorner.x;
             var scrHeightUnits = worldTopRightCorner.y - worldBtmLeftCorner.y;
             var pos = new Vector2(Random.Range(-scrWidthUnits/2f, scrWidthUnits/2f), Random.Range(-scrHeightUnits/2f, scrHeightUnits/2f));
-            if (PhotonNetwork.IsMasterClient && !_isTestMode)
+            if (!_isTestMode)
             {
                 var playerObj = PhotonNetwork.Instantiate(_playerPrefab, pos, Quaternion.identity);
                 await UniTask.WaitUntil(() => playerObj != null);
