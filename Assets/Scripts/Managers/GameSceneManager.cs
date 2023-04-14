@@ -46,6 +46,10 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
             _cam = Camera.main;
 
+            const int DesiredScreenWidthPixels = 1920;
+            Vector2Int newResolution = new Vector2Int(DesiredScreenWidthPixels,Mathf.RoundToInt((float)Screen.height * DesiredScreenWidthPixels / Screen.width));
+            Screen.SetResolution(newResolution.x,newResolution.y, true);
+
             Subscribe();
 
             if (PUN2Controller.Instance.IsCurrentRoom)
@@ -55,20 +59,20 @@ namespace AlexeyVlasyuk.MultiplayerTest
                 if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount < 2)
                 {
                     //cover screen with waiting for players message if must wait for other players
-                    _joystCanvas.enabled = false;
-                    _uiCanvas.enabled = true;
+                    ShowUI();
                 }
                 else
                 {
-                    _joystCanvas.enabled = true;
-                    _uiCanvas.enabled = false;
+                    HideUI();
                     _isGameStarted = true;
                 }
             }
             else
             {
                 Debug.Log("No current room defined. Scene is running in test mode");
+                HideUI();
                 _isTestMode = true;
+                _isGameStarted = true;
                 _roomSeed = PUN2Controller.Instance.GetRandomSeed();
             }
 
@@ -76,7 +80,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
             //start building room immediately if master client.
             //Otherwise waiting for RoomIsReady net event
-            if (PhotonNetwork.IsMasterClient)
+            if (PhotonNetwork.IsMasterClient || _isTestMode)
             {
                 CreateRoom(_roomSeed);
             }
@@ -100,7 +104,19 @@ namespace AlexeyVlasyuk.MultiplayerTest
                 _player.UpdateRotation(_rotationJoyst.Horizontal, _rotationJoyst.Vertical);
             }
         }
-        
+
+        private void ShowUI()
+        {
+            _joystCanvas.enabled = false;
+            _uiCanvas.enabled = true;
+        }
+
+        private void HideUI()
+        {
+            _joystCanvas.enabled = true;
+            _uiCanvas.enabled = false;
+        }
+
         private void CreateRoom(int roomSeed)
         {
             _borders.Generate();
@@ -113,7 +129,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         private async void ScatterCoins()
         {
-            const float Margin = 0.5f;
+            const float Margin = 2f;
             
             var worldBtmLeftCorner = _cam.ScreenToWorldPoint(Vector3.zero);
             var worldTopRightCorner = _cam.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height));
@@ -186,8 +202,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         private void OnP2ControllerOtherPlayersJoinedRoom()
         {
-            _joystCanvas.enabled = true;
-            _uiCanvas.enabled = false;
+            HideUI();
             _isGameStarted = true;
         }
 
