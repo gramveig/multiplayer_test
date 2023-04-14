@@ -164,7 +164,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
             PUN2Controller.Instance.RaiseRoomIsReadyEvent();
         }
 
-        private async void ScatterCoins()
+        private void ScatterCoins()
         {
             const float Margin = 2f;
             
