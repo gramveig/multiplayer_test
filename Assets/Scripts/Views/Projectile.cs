@@ -36,8 +36,6 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
 
         private void OnTriggerEnter2D(Collider2D col)
         {
-            Debug.Log(col);
-            
             if (col.CompareTag("Player"))
             {
                 _onHit?.Invoke(_damage);
@@ -45,7 +43,6 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
             }
             else if (col.CompareTag("Border"))
             {
-                Debug.Log("moo");
                 ReturnToPool();
             }
         }
