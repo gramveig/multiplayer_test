@@ -304,9 +304,10 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         private void LoseGame()
         {
+            _localPlayer.NetworkDestroy();
             PUN2Controller.Instance.DisconnectFromServer();
             _isGameStarted = false;
-            ShowUI(_loseScreen);
+            //ShowUI(_loseScreen);
             _loseScreen.SetContent(_gameModel.PlayerName, _gameModel.Coins);
         }
 

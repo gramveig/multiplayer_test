@@ -74,7 +74,19 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
         {
             GameSceneManager.Instance.OnPlayerInstantiated(this, info.Sender.NickName);
         }
-        
+
+        public void NetworkDestroy()
+        {
+            if (_photonView.IsMine)
+            {
+                PhotonNetwork.Destroy(gameObject);
+            }
+            else
+            {
+                _photonView.RPC("OnNetworkDestroy", RpcTarget.MasterClient);
+            }
+        }
+
         [PunRPC]
         private void OnNetworkStartFire()
         {
@@ -85,6 +97,12 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
         private void OnNetworkStopFire()
         {
             _cannon.StopFire();
+        }
+
+        [PunRPC]
+        private void OnNetworkDestroy()
+        {
+            PhotonNetwork.Destroy(gameObject);
         }
     }
 }
