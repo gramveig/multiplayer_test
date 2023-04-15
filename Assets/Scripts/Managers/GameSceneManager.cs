@@ -274,20 +274,18 @@ namespace AlexeyVlasyuk.MultiplayerTest
             if (!PUN2Controller.Instance.IsRoomCreated(TestRoomName))
             {
                 PUN2Controller.Instance.CreateRoom(TestRoomName);
+                PUN2Controller.Instance.OnP2ControllerJoinedRoom += OnP2ControllerJoinedRoom;
             }
             else
             {
                 PUN2Controller.Instance.JoinRoom(TestRoomName);
             }
-
-            PUN2Controller.Instance.OnP2ControllerJoinedRoom += OnP2ControllerJoinedRoom;
         }
 
         private void OnP2ControllerJoinedRoom()
         {
             PUN2Controller.Instance.OnP2ControllerJoinedRoom -= OnP2ControllerJoinedRoom;
             StartRoom();
-            PUN2Controller.Instance.EnableCustomPun2Events();
             CreateRoom(_roomSeed);
         }
         
