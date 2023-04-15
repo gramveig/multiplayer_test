@@ -103,7 +103,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
             //Otherwise waiting for RoomIsReady net event
             if (PhotonNetwork.IsMasterClient)
             {
-                CreateRoom(_roomSeed);
+                CreateRoom();
             }
         }
 
@@ -171,7 +171,6 @@ namespace AlexeyVlasyuk.MultiplayerTest
         
         private void ShowUI(UIScreen screen)
         {
-            _joystCanvas.enabled = false;
             _uiCanvas.enabled = true;
             HideAllScreens();
             screen.Show();
@@ -179,7 +178,6 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         private void HideUI()
         {
-            _joystCanvas.enabled = true;
             _uiCanvas.enabled = false;
         }
 
@@ -190,11 +188,12 @@ namespace AlexeyVlasyuk.MultiplayerTest
             _loseScreen.Hide();
         }
 
-        private void CreateRoom(int roomSeed)
+        private void CreateRoom()
         {
             _borders.Generate();
             AddPlayer();
-            Random.InitState(roomSeed);
+            _roomSeed = PUN2Controller.Instance.GetCurrentRoomSeed();
+            Random.InitState(_roomSeed);
             ScatterCoins();
             _isRoomBuilt = true;
             OnRoomCreated();
@@ -272,13 +271,11 @@ namespace AlexeyVlasyuk.MultiplayerTest
                 return;
             }
             
-            CreateRoom(_roomSeed);
+            CreateRoom();
         }
 
         private void StartRoom()
         {
-            _roomSeed = PUN2Controller.Instance.GetCurrentRoomSeed();
-
             if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount < 2)
             {
                 //cover screen with waiting for players message if must wait for other players
@@ -341,8 +338,8 @@ namespace AlexeyVlasyuk.MultiplayerTest
         private void OnP2ControllerJoinedRoom()
         {
             PUN2Controller.Instance.OnP2ControllerJoinedRoom -= OnP2ControllerJoinedRoom;
+            CreateRoom();
             StartRoom();
-            CreateRoom(_roomSeed);
         }
 
         public void OnTestButtonPressed()
