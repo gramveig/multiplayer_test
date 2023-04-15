@@ -26,5 +26,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.Models
                 return h / _total;
             }
         }
+
+        public bool IsDead => _current <= 0;
     }
 }

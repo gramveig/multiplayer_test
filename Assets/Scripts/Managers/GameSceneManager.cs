@@ -46,6 +46,9 @@ namespace AlexeyVlasyuk.MultiplayerTest
         [SerializeField]
         private CoinBar _coinBar;
 
+        [SerializeField]
+        private UIScreen _waitingPlayers;
+        
         private static GameSceneManager _instance;
         private Camera _cam;
         private Player _localPlayer;
@@ -152,7 +155,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         #endregion
         
-        private void ShowUI()
+        private void ShowUI(UIScreen screen)
         {
             _joystCanvas.enabled = false;
             _uiCanvas.enabled = true;
@@ -256,7 +259,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
             if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount < 2)
             {
                 //cover screen with waiting for players message if must wait for other players
-                ShowUI();
+                ShowUI(_waitingPlayers);
             }
             else
             {
@@ -265,6 +268,30 @@ namespace AlexeyVlasyuk.MultiplayerTest
             }
         }
 
+        private void MonitorGameEnd()
+        {
+            if (_gameModel.IsPlayerDead)
+            {
+                LoseGame();
+                return;
+            }
+
+            if (PhotonNetwork.CurrentRoom.PlayerCount < 2)
+            {
+                WinGame();
+            }
+        }
+
+        private void LoseGame()
+        {
+
+        }
+
+        private void WinGame()
+        {
+
+        }
+        
         #region Scene Debug Mode
         
         private void OnP2ControllerConnectedToLobby()
