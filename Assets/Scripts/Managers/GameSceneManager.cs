@@ -60,7 +60,6 @@ namespace AlexeyVlasyuk.MultiplayerTest
         private Player _localPlayer;
         private bool _isRoomBuilt;
         private bool _isGameStarted;
-        private int _roomSeed;
         private GameModel _gameModel;
 
         private const string TestRoomName = "Test Room";
@@ -192,8 +191,6 @@ namespace AlexeyVlasyuk.MultiplayerTest
         {
             _borders.Generate();
             AddPlayer();
-            _roomSeed = PUN2Controller.Instance.GetCurrentRoomSeed();
-            Random.InitState(_roomSeed);
             ScatterCoins();
             _isRoomBuilt = true;
             OnRoomCreated();
