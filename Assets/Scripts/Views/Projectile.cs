@@ -14,10 +14,12 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
 
         private Transform _transform;
         private ObjectPool<Projectile> _pool;
+        private SpriteRenderer _spriteRenderer;
 
         private void Awake()
         {
             _transform = transform;
+            _spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
         public void Init(ObjectPool<Projectile> pool)
@@ -26,6 +28,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
         }
 
         public Transform CachedTransform => _transform;
+        public SpriteRenderer CachedSpriteRenderer => _spriteRenderer;
         
         private void Update() 
         {

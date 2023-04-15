@@ -15,6 +15,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
         private ObjectPool<Projectile> _projectilePool;
         private float _fireTimer;
         private bool _isFiring;
+        private Color _color;
 
         private void Awake()
         {
@@ -51,9 +52,18 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
             _isFiring = false;
         }
 
+        public void SetColor(Color color)
+        {
+            SpriteRenderer sr = GetComponent<SpriteRenderer>();
+            sr.color = color;
+
+            _color = color;
+        }
+
         private void FireOnce()
         {
             var projectile = _projectilePool.Draw();
+            projectile.CachedSpriteRenderer.color = _color;
             projectile.CachedTransform.position = IniPos;
             projectile.CachedTransform.localRotation = _transform.rotation;
         }

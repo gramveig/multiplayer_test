@@ -91,11 +91,10 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
 
         private void ChangeColor(Color color)
         {
-            SpriteRenderer[] srs = GetComponentsInChildren<SpriteRenderer>();
-            foreach (var sr in srs)
-            {
-                sr.color = color;
-            }
+            SpriteRenderer sr = GetComponent<SpriteRenderer>();
+            sr.color = color;
+
+            _cannon.SetColor(color);
         }
 
         [PunRPC]

@@ -212,6 +212,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             }
 
             int roomSeed = GetRandomSeed();
+            //as PUN2 can't serialize colors, we will store in a room their shuffled indexes for ColorHelper.AllColors
             var colorIndexes = ArrayHelper.GetRandomizedIndexes(ColorHelper.AllColors.Length);
             ArrayHelper.ShuffleArray(colorIndexes);
 
