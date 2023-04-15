@@ -161,6 +161,12 @@ namespace AlexeyVlasyuk.MultiplayerTest
             _localPlayer.StopFire();
         }
 
+        //called from end game screen
+        public void OnPlayAgainPressed()
+        {
+            SceneManager.LoadScene("Loading");
+        }
+        
         #endregion
         
         private void ShowUI(UIScreen screen)
@@ -197,7 +203,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         private void OnRoomCreated()
         {
-            _gameModel = new GameModel(_localPlayer.TotalHealth, _numCoins);
+            _gameModel = new GameModel(PhotonNetwork.NickName, _localPlayer.TotalHealth, _numCoins);
             _gameModel.AddCoinObserver(_coinBar);
             _gameModel.AddHealthObserver(_healthBar);
         }
@@ -301,19 +307,21 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         private void LoseGame()
         {
+            PUN2Controller.Instance.DisconnectFromServer();
             _isGameStarted = false;
             ShowUI(_loseScreen);
-            _loseScreen.SetContent(PhotonNetwork.NickName, _gameModel.Coins);
+            _loseScreen.SetContent(_gameModel.PlayerName, _gameModel.Coins);
         }
 
         private void WinGame()
         {
+            PUN2Controller.Instance.DisconnectFromServer();
             _isGameStarted = false;
             ShowUI(_winScreen);
-            _winScreen.SetContent(PhotonNetwork.NickName, _gameModel.Coins);
+            _winScreen.SetContent(_gameModel.PlayerName, _gameModel.Coins);
         }
         
-        #region Scene Debug Mode
+        #region Scene Debug Methods
         
         private void OnP2ControllerConnectedToLobby()
         {
@@ -336,7 +344,12 @@ namespace AlexeyVlasyuk.MultiplayerTest
             StartRoom();
             CreateRoom(_roomSeed);
         }
-        
+
+        public void OnTestButtonPressed()
+        {
+            _gameModel.AddDamageToPlayer(10);
+        }
+
         #endregion
     }
 }

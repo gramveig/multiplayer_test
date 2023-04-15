@@ -6,13 +6,15 @@ namespace AlexeyVlasyuk.MultiplayerTest.Models
 {
     public class GameModel : IObservable<PlayerHealth>, IObservable<GatheredCoins>
     {
+        private string _playerName;
         private PlayerHealth _playerHealth;
         private GatheredCoins _gatheredCoins;
         private List<IObserver<PlayerHealth>> _healthObservers = new();
         private List<IObserver<GatheredCoins>> _coinObservers = new();
 
-        public GameModel(float totalPlayerHealth, int totalCoins)
+        public GameModel(string playerName, float totalPlayerHealth, int totalCoins)
         {
+            _playerName = playerName;
             _playerHealth = new PlayerHealth(totalPlayerHealth);
             _gatheredCoins = new GatheredCoins(totalCoins);
         }
@@ -39,6 +41,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.Models
 
         public bool IsPlayerDead => _playerHealth.IsDead;
         public GatheredCoins Coins => _gatheredCoins;
+        public string PlayerName => _playerName;
         
         public void AddCoin()
         {

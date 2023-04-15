@@ -368,7 +368,12 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
 
             return false;
         }
-        
+
+        public void DisconnectFromServer()
+        {
+            SetConnectionState(csDisconnected);
+        }
+
         #endregion
         
         #region Private
