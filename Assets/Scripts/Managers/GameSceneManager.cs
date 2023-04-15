@@ -298,7 +298,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
             if (PhotonNetwork.CurrentRoom.PlayerCount < 2)
             {
-                //WinGame();
+                WinGame();
             }
         }
 
@@ -307,7 +307,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
             _localPlayer.NetworkDestroy();
             PUN2Controller.Instance.DisconnectFromServer();
             _isGameStarted = false;
-            //ShowUI(_loseScreen);
+            ShowUI(_loseScreen);
             _loseScreen.SetContent(_gameModel.PlayerName, _gameModel.Coins);
         }
 
