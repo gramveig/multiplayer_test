@@ -72,7 +72,9 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
 
         public void OnPhotonInstantiate(PhotonMessageInfo info)
         {
-            GameSceneManager.Instance.OnPlayerInstantiated(this, info.Sender.NickName);
+            var color = GameSceneManager.Instance.GetPlayerColor(info.Sender.ActorNumber);
+            GameSceneManager.Instance.OnPlayerInstantiated(this, info.Sender.NickName, color);
+            ChangeColor(color);
         }
 
         public void NetworkDestroy()
@@ -84,6 +86,15 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
             else
             {
                 _photonView.RPC("OnNetworkDestroy", RpcTarget.MasterClient);
+            }
+        }
+
+        private void ChangeColor(Color color)
+        {
+            SpriteRenderer[] srs = GetComponentsInChildren<SpriteRenderer>();
+            foreach (var sr in srs)
+            {
+                sr.color = color;
             }
         }
 

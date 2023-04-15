@@ -1,5 +1,6 @@
 using AlexeyVlasyuk.MultiplayerTest.Models;
 using AlexeyVlasyuk.MultiplayerTest.PUN2;
+using AlexeyVlasyuk.MultiplayerTest.Utilities;
 using AlexeyVlasyuk.MultiplayerTest.Views;
 using Cysharp.Threading.Tasks;
 using Photon.Pun;
@@ -28,9 +29,6 @@ namespace AlexeyVlasyuk.MultiplayerTest
         [SerializeField]
         private FixedJoystick _rotationJoyst;
 
-        [SerializeField]
-        private Canvas _joystCanvas;
-        
         [SerializeField]
         private Canvas _uiCanvas;
         
@@ -61,6 +59,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
         private bool _isRoomBuilt;
         private bool _isGameStarted;
         private GameModel _gameModel;
+        private int[] _roomColorIndexes;
 
         private const string TestRoomName = "Test Room";
         
@@ -138,14 +137,29 @@ namespace AlexeyVlasyuk.MultiplayerTest
             _gameModel.AddCoin();
         }
 
-        public void OnPlayerInstantiated(Player player, string playerName)
+        public void OnPlayerInstantiated(Player player, string playerName, Color color)
         {
-            AddPlayerLabel(player, playerName);
+            AddPlayerLabel(player, playerName, color);
         }
 
         public void OnPlayerHit(float damage)
         {
             _gameModel.AddDamageToPlayer(damage);
+        }
+
+        public Color GetPlayerColor(int playerNumber)
+        {
+            if (_roomColorIndexes == null)
+            {
+                _roomColorIndexes = (int[])PhotonNetwork.CurrentRoom.CustomProperties["ColorIndexes"];
+            }
+
+            int colorCount = _roomColorIndexes.Length;
+            //we have index of index here, as colors are stored in a room as indexes of ColorHelper.AllColors
+            int colorIdxIdx = playerNumber % colorCount;
+            int colorIdx = _roomColorIndexes[colorIdxIdx];
+
+            return ColorHelper.AllColors[colorIdx];
         }
 
         //called from screen joystick
@@ -165,8 +179,10 @@ namespace AlexeyVlasyuk.MultiplayerTest
         {
             SceneManager.LoadScene("Loading");
         }
-        
+
         #endregion
+
+        #region Private
         
         private void ShowUI(UIScreen screen)
         {
@@ -229,11 +245,11 @@ namespace AlexeyVlasyuk.MultiplayerTest
             _localPlayer = playerObj.GetComponent<Player>();
         }
 
-        private void AddPlayerLabel(Player player, string nickName)
+        private void AddPlayerLabel(Player player, string nickName, Color color)
         {
             var pos = _cam.WorldToScreenPoint(player.CachedTransform.position);
             var playerLabel = Instantiate(_playerLabelPrefab, pos, Quaternion.identity, _playersCanvas.transform);
-            playerLabel.Init(nickName, player);
+            playerLabel.Init(nickName, player, color);
         }
         
         private void Subscribe()
@@ -315,6 +331,8 @@ namespace AlexeyVlasyuk.MultiplayerTest
             ShowUI(_winScreen);
             _winScreen.SetContent(_gameModel.PlayerName, _gameModel.Coins);
         }
+        
+        #endregion
         
         #region Scene Debug Methods
         

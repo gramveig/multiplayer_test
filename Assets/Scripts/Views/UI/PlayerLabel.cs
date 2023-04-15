@@ -11,6 +11,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
         private Player _player;
         private Camera _cam;
         private string _name;
+        private Color _color;
         
         private void Awake()
         {
@@ -22,6 +23,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
         private void Start()
         {
             _nameText.text = _name;
+            _nameText.color = _color;
         }
         
         private void Update()
@@ -34,10 +36,11 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
             _player.OnPlayerDestroyed -= OnPlayerDestroyed;
         }
 
-        public void Init(string name, Player player)
+        public void Init(string name, Player player, Color color)
         {
             _name = name;
             _player = player;
+            _color = color;
 
             _player.OnPlayerDestroyed += OnPlayerDestroyed;
         }

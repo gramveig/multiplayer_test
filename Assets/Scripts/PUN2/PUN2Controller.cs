@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates;
+using AlexeyVlasyuk.MultiplayerTest.Utilities;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
@@ -211,6 +212,8 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             }
 
             int roomSeed = GetRandomSeed();
+            var colorIndexes = ArrayHelper.GetRandomizedIndexes(ColorHelper.AllColors.Length);
+            ArrayHelper.ShuffleArray(colorIndexes);
 
             RoomOptions roomOptions = new RoomOptions
             {
@@ -219,7 +222,8 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
                 MaxPlayers = MaxPlayersInRoom,
                 CustomRoomProperties = new ExitGames.Client.Photon.Hashtable
                 {
-                    { "Seed", roomSeed }
+                    { "Seed", roomSeed },
+                    { "ColorIndexes", colorIndexes }
                 }
             };
 
