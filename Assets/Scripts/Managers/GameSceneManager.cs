@@ -315,7 +315,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
         {
             PUN2Controller.Instance.DisconnectFromServer();
             _isGameStarted = false;
-            ShowUI(_winScreen);
+            //ShowUI(_winScreen);
             _winScreen.SetContent(_gameModel.PlayerName, _gameModel.Coins);
         }
         
