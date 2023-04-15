@@ -4,20 +4,20 @@ namespace AlexeyVlasyuk.MultiplayerTest.Models
 {
     public struct GatheredCoins
     {
-        private readonly int _total;
-        private int _gathered;
+        public readonly int total;
+        public int gathered;
 
         public GatheredCoins(int total)
         {
-            _total = total;
-            _gathered = 0;
+            this.total = total;
+            gathered = 0;
         }
 
         public void Add()
         {
-            _gathered++;
+            gathered++;
         }
 
-        public float Rate => Mathf.Clamp((float) _gathered / _total, 0, 1f);
+        public float Rate => Mathf.Clamp((float) gathered / total, 0, 1f);
     }
 }

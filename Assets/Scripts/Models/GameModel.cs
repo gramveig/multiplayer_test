@@ -38,6 +38,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.Models
         }
 
         public bool IsPlayerDead => _playerHealth.IsDead;
+        public GatheredCoins Coins => _gatheredCoins;
         
         public void AddCoin()
         {

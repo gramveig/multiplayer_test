@@ -49,6 +49,12 @@ namespace AlexeyVlasyuk.MultiplayerTest
         [SerializeField]
         private UIScreen _waitingPlayers;
         
+        [SerializeField]
+        private EndGameScreen _winScreen;
+        
+        [SerializeField]
+        private EndGameScreen _loseScreen;
+        
         private static GameSceneManager _instance;
         private Camera _cam;
         private Player _localPlayer;
@@ -118,6 +124,8 @@ namespace AlexeyVlasyuk.MultiplayerTest
                 _localPlayer.UpdateCoord(_coordJoyst.Horizontal, _coordJoyst.Vertical);
                 _localPlayer.UpdateRotation(_rotationJoyst.Horizontal, _rotationJoyst.Vertical);
             }
+
+            MonitorGameEnd();
         }
 
         #endregion
@@ -159,12 +167,21 @@ namespace AlexeyVlasyuk.MultiplayerTest
         {
             _joystCanvas.enabled = false;
             _uiCanvas.enabled = true;
+            HideAllScreens();
+            screen.Show();
         }
 
         private void HideUI()
         {
             _joystCanvas.enabled = true;
             _uiCanvas.enabled = false;
+        }
+
+        private void HideAllScreens()
+        {
+            _waitingPlayers.Hide();
+            _winScreen.Hide();
+            _loseScreen.Hide();
         }
 
         private void CreateRoom(int roomSeed)
@@ -284,12 +301,16 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         private void LoseGame()
         {
-
+            _isGameStarted = false;
+            ShowUI(_loseScreen);
+            _loseScreen.SetContent(PhotonNetwork.NickName, _gameModel.Coins);
         }
 
         private void WinGame()
         {
-
+            _isGameStarted = false;
+            ShowUI(_winScreen);
+            _winScreen.SetContent(PhotonNetwork.NickName, _gameModel.Coins);
         }
         
         #region Scene Debug Mode
