@@ -15,7 +15,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
         public void SetContent(string playerName, GatheredCoins coins)
         {
             _playerNameField.text = "Winning player: " + playerName;
-            _coinsField.text = $"You gathered: {coins.gathered} of {coins.total}";
+            _coinsField.text = $"You gathered {coins.gathered} of {coins.total} coins";
         }
     }
 }
