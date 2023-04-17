@@ -1,5 +1,7 @@
 using System;
+using AlexeyVlasyuk.MultiplayerTest.Models;
 using Photon.Pun;
+using Photon.Pun.Demo.PunBasics;
 using UnityEngine;
 
 namespace AlexeyVlasyuk.MultiplayerTest.Views
@@ -20,6 +22,8 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
 
         private Transform _transform;
         private PhotonView _photonView;
+        private Color _color;
+        private int _colorIdx;
 
         public event Action OnPlayerDestroyed;
 
@@ -74,7 +78,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
         {
             var color = GameSceneManager.Instance.GetPlayerColor(info.Sender.ActorNumber);
             GameSceneManager.Instance.OnPlayerInstantiated(this, info.Sender.NickName, color);
-            ChangeColor(color);
+            SetColor(color);
         }
 
         public void NetworkDestroy()
@@ -89,8 +93,11 @@ namespace AlexeyVlasyuk.MultiplayerTest.Views
             }
         }
 
-        private void ChangeColor(Color color)
+        public Color PlayerColor => _color;
+
+        private void SetColor(Color color)
         {
+            _color = color;
             SpriteRenderer sr = GetComponent<SpriteRenderer>();
             sr.color = color;
 

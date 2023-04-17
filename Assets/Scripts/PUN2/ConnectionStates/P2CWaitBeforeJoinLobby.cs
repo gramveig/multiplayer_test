@@ -64,6 +64,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates
         void OnFailure()
         {
             p2c.CallOnDisconnectEvent();
+            p2c.SetConnectionState(p2c.csDisconnected);
         }
     }
 }

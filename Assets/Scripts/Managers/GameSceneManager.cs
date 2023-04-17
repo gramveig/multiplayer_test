@@ -1,3 +1,4 @@
+using System.Timers;
 using AlexeyVlasyuk.MultiplayerTest.Models;
 using AlexeyVlasyuk.MultiplayerTest.PUN2;
 using AlexeyVlasyuk.MultiplayerTest.Utilities;
@@ -48,10 +49,10 @@ namespace AlexeyVlasyuk.MultiplayerTest
         private UIScreen _waitingPlayers;
         
         [SerializeField]
-        private EndGameScreen _winScreen;
+        private WinScreen _winScreen;
         
         [SerializeField]
-        private EndGameScreen _loseScreen;
+        private LoseScreen _loseScreen;
         
         private static GameSceneManager _instance;
         private Camera _cam;
@@ -131,6 +132,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
         #region Public
 
         public static GameSceneManager Instance => _instance;
+        public GameModel Model => _gameModel;
 
         public void OnCoinPicked()
         {
@@ -183,7 +185,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
         #endregion
 
         #region Private
-        
+
         private void ShowUI(UIScreen screen)
         {
             _uiCanvas.enabled = true;
@@ -215,7 +217,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
 
         private void OnRoomCreated()
         {
-            _gameModel = new GameModel(PhotonNetwork.NickName, _localPlayer.TotalHealth, _numCoins);
+            _gameModel = new GameModel(PhotonNetwork.NickName, _localPlayer.TotalHealth, _numCoins, _localPlayer.PlayerColor);
             _gameModel.AddCoinObserver(_coinBar);
             _gameModel.AddHealthObserver(_healthBar);
         }
@@ -243,6 +245,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
             var pos = new Vector2(Random.Range(-scrWidthUnitsHalf/2f, scrWidthUnitsHalf/2f), Random.Range(-scrHeightUnitsHalf/2f, scrHeightUnitsHalf/2f));
             var playerObj = PhotonNetwork.Instantiate(_playerPrefab, pos, Quaternion.identity);
             _localPlayer = playerObj.GetComponent<Player>();
+            
         }
 
         private void AddPlayerLabel(Player player, string nickName, Color color)
@@ -321,7 +324,7 @@ namespace AlexeyVlasyuk.MultiplayerTest
             PUN2Controller.Instance.DisconnectFromServer();
             _isGameStarted = false;
             ShowUI(_loseScreen);
-            _loseScreen.SetContent(_gameModel.PlayerName, _gameModel.Coins);
+            _loseScreen.SetContent(_gameModel.Coins.gathered, _gameModel.Coins.total);
         }
 
         private void WinGame()
@@ -329,9 +332,9 @@ namespace AlexeyVlasyuk.MultiplayerTest
             PUN2Controller.Instance.DisconnectFromServer();
             _isGameStarted = false;
             ShowUI(_winScreen);
-            _winScreen.SetContent(_gameModel.PlayerName, _gameModel.Coins);
+            _winScreen.SetContent(_gameModel.PlayerName, _gameModel.PlayerColor, _gameModel.Coins.gathered, _gameModel.Coins.total);
         }
-        
+
         #endregion
         
         #region Scene Debug Methods

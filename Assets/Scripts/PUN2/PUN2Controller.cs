@@ -1,17 +1,19 @@
 using System.Collections.Generic;
+using AlexeyVlasyuk.MultiplayerTest.Models;
 using AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates;
 using AlexeyVlasyuk.MultiplayerTest.Utilities;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
-using Action = System.Action;
+using System;
 
 namespace AlexeyVlasyuk.MultiplayerTest.PUN2
 {
     public enum PUN2CustomEvents : byte
     {
-        RoomIsReady
+        RoomIsReady,
+        MasterPlayerData
     };
     
     public class PUN2Controller : MonoBehaviourPunCallbacks
@@ -132,7 +134,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         {
             const string BaseName = "player";
 
-            return BaseName + Random.Range(1, 999);
+            return BaseName + UnityEngine.Random.Range(1, 999);
         }
         
         public void SetConnectionState(PUN2ConnectionState newConnectionState)
@@ -292,6 +294,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
             OnP2ControllerOtherPlayersJoinedRoom?.Invoke();
         }
 
+       
         public List<string> GetRoomNames(string nameStart, int maxNames)
         {
             _roomNames.Clear();
@@ -336,7 +339,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
 
         public int GetRandomSeed()
         {
-            return Random.Range(int.MinValue, int.MaxValue);
+            return UnityEngine.Random.Range(int.MinValue, int.MaxValue);
         }
 
         public void RaiseRoomIsReadyEvent()
@@ -474,6 +477,11 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
             _connectionState.OnPlayerEnteredRoom(newPlayer);
+        }
+
+        public override void OnMasterClientSwitched(Player newMasterClient)
+        {
+            _connectionState.OnMasterClientSwitched(newMasterClient);
         }
 
         #endregion

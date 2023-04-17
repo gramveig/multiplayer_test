@@ -16,6 +16,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates
             {
                 Debug.Log("PUN2: not connected to server");
                 p2c.CallOnDisconnectEvent();
+                p2c.SetConnectionState(p2c.csDisconnected);
                 return;
             }
 

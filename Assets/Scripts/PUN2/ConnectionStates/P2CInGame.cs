@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 
 namespace AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates
@@ -54,6 +55,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates
         private void OnDisconnect()
         {
             p2c.CallOnDisconnectEvent();
+            p2c.SetConnectionState(p2c.csDisconnected);
         }
 
         private void OnOtherPlayersJoinedRoom()

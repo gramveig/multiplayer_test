@@ -24,12 +24,14 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates
             {
                 Debug.LogError("PUN2: not connected to server");
                 OnServerDisconnect();
+                return;
             }
 
             if (PhotonNetwork.InLobby)
             {
                 Debug.LogError("PUN2: already in Lobby");
                 OnSuccess();
+                return;
             }
 
             _timer = 0;
@@ -61,6 +63,7 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2.ConnectionStates
         void OnServerDisconnect()
         {
             p2c.CallOnDisconnectEvent();
+            p2c.SetConnectionState(p2c.csDisconnected);
         }
     }
 }

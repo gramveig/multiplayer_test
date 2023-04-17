@@ -82,6 +82,10 @@ namespace AlexeyVlasyuk.MultiplayerTest.PUN2
         {
         }
 
+        public virtual void OnMasterClientSwitched(Player newMasterClient)
+        {
+        }
+        
         //NOTE!
         //if adding callback here, it should also be added to PUN2Controller
 
